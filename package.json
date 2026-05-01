@@ -11,9 +11,14 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@azure/msal-node": "^5.1.5",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "ldapjs": "^3.0.7",
+    "mysql": "^2.18.1",
     "passport": "^0.7.0",
-    "passport-ldapauth": "^3.0.1"
+    "passport-ldapauth": "^3.0.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   }
 }
