@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -15,10 +17,13 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "ldapjs": "^3.0.7",
-    "mysql": "^2.18.1",
+    "mysql2": "^3.22.3",
     "passport": "^0.7.0",
     "passport-ldapauth": "^3.0.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }
