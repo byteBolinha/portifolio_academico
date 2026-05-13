@@ -65,6 +65,7 @@ CREATE TABLE document_types (
 
 CREATE TABLE academic_documents(
     id_academicD INT AUTO_INCREMENT PRIMARY KEY,
+    name_academicD VARCHAR(150),
     competency_id INT NOT NULL,
     id_documentType INT NOT NULL,-- faz sentido para mim colocar uma tabela separada, e se o planner no futuro mudar de nome?
 
