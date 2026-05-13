@@ -1,4 +1,5 @@
 #aquela parada de remover usuario, ou permitir marcar como concluido a integra��o do RM.
+
 CREATE TABLE permissions (
     id_permissions INT AUTO_INCREMENT PRIMARY KEY,
     name_permissions VARCHAR(50)
@@ -21,8 +22,9 @@ CREATE TABLE roles_permissions(
 CREATE TABLE courses(
     id_courses INT AUTO_INCREMENT PRIMARY KEY,
     name_courses VARCHAR(255),
-    data_lancamento_courses DATE,
-    lancado_no_sistema_courses DATE DEFAULT CURRENT_TIMESTAMP
+    launch_date_courses TIMESTAMP,
+    created_at_courses TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    course_icon_url VARCHAR(300)
 
 );
 
@@ -30,6 +32,7 @@ CREATE TABLE users(
     id_users INT PRIMARY KEY AUTO_INCREMENT,
     microsoft_id VARCHAR(255) UNIQUE, #microsoft usa um UUID.
     roles_id INT,
+    avatar_users VARCHAR(500), #validar se o avatar enviado da microsoft é link
 
     name_users VARCHAR(255) NOT NULL,
     email_users VARCHAR(255) NOT NULL UNIQUE,
@@ -56,7 +59,7 @@ CREATE TABLE competency(
     CONSTRAINT fk_competency_course FOREIGN KEY (course_id) REFERENCES courses(id_courses) ON DELETE CASCADE
 );
 CREATE TABLE document_types (
-    id_ INT AUTO_INCREMENT PRIMARY KEY,
+    id_documentType INT AUTO_INCREMENT PRIMARY KEY,
     name_documentType VARCHAR(30)
 );
 
@@ -79,5 +82,20 @@ CREATE TABLE academic_documents(
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_document_competency FOREIGN KEY (competency_id) REFERENCES competency(id_competency) ON DELETE CASCADE
+    CONSTRAINT fk_document_competency FOREIGN KEY (competency_id) REFERENCES competency(id_competency) ON DELETE CASCADE,
+    CONSTRAINT fk_document_type FOREIGN KEY (id_documentType) REFERENCES document_types(id_documentType) ON DELETE CASCADE
 );
+
+# THE GREAT ROLLBACK
+
+/*
+DROP TABLE IF EXISTS academic_documents;
+DROP TABLE IF EXISTS document_types;
+DROP TABLE IF EXISTS competency;
+DROP TABLE IF EXISTS user_courses;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS courses;
+DROP TABLE IF EXISTS roles_permissions;
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS permissions;
+ */
