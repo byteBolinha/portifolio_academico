@@ -43,6 +43,41 @@ CREATE TABLE user_courses(
     course_id INT,
     PRIMARY KEY (user_id, course_id),
 
-    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users (id_users),
-    CONSTRAINT fk_course FOREIGN KEY (course_id) REFERENCES courses (id_courses)
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users (id_users) ON DELETE CASCADE ,
+    CONSTRAINT fk_course FOREIGN KEY (course_id) REFERENCES courses (id_courses) ON DELETE CASCADE
+);
+
+CREATE TABLE competency(
+    id_competency INT AUTO_INCREMENT PRIMARY KEY,
+    name_competency VARCHAR(255) NOT NULL,
+    course_id INT NOT NULL,
+    code_competency VARCHAR(10) NOT NULL,
+
+    CONSTRAINT fk_competency_course FOREIGN KEY (course_id) REFERENCES courses(id_courses) ON DELETE CASCADE
+);
+CREATE TABLE document_types (
+    id_ INT AUTO_INCREMENT PRIMARY KEY,
+    name_documentType VARCHAR(30)
+);
+
+CREATE TABLE academic_documents(
+    id_academicD INT AUTO_INCREMENT PRIMARY KEY,
+    competency_id INT NOT NULL,
+    id_documentType INT NOT NULL,-- faz sentido para mim colocar uma tabela separada, e se o planner no futuro mudar de nome?
+
+    matriz VARCHAR(20),      -- Ex: 'Matriz - 62'
+    trimestre ENUM('1ª Trimestre', '2ª Trimestre', '3ª Trimestre', '4ª Trimestre'),
+
+    flag_liberado_customizar BOOLEAN DEFAULT FALSE,
+    flag_preenchido BOOLEAN DEFAULT FALSE,
+    flag_validacao_coordenacao BOOLEAN DEFAULT FALSE,
+    flag_integrado_rm BOOLEAN DEFAULT FALSE,
+    flag_disponivel_canva BOOLEAN DEFAULT FALSE,
+
+    drive_link VARCHAR(500), -- Link do arquivo no Google Drive/OneDrive
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_document_competency FOREIGN KEY (competency_id) REFERENCES competency(id_competency) ON DELETE CASCADE
 );
