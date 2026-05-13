@@ -5,22 +5,59 @@ USE estudos_sistemas;
  RBAC.
  */
 INSERT INTO permissions (name_permissions) VALUES
-('LISTAR_COURSES'), #1 1
-('REMOVER_COURSES'), #2 1
-('CRIAR_COURSES'), #3 2
-('COMPLETE_RM_INTEGRATION'), #4 1
-('FILL_PLANNER'), #5 2
-('FILL_TEACHING_PLAN'), #6 3
-('RELEASE_CUSTOMIZATION'), #7 1+2
-('VIEW_ALL'), # 8 1+2+3
-('MANAGE_USERS'); #9 1
+('READ_ALL'),                
+('CRIAR_CURSO'),              
+('CRIAR_COMPETENCIA'),      
+('FLAG_PREENCHIDO'),         
+('FLAG_AVALIADO_COORD'),     
+('FLAG_AVALIADO_GESTAO'),    
+('FLAG_CANVAS_INTEGRATION'),  
+('MANAGE_LINKS_DRIVE'),      
+('MANAGE_PERMISSIONS');      
+
 SELECT * FROM permissions;
 
-
 INSERT INTO roles (name_roles) VALUES
-('NITE'), #1
-('COORDINATOR'),#2
-('TEACHER'); #3
+('ADMIN'),        -- #1: Autoridade total e gestão de permissões 
+('NITE'),         -- #2: Autoridade para todas as etapas e criação
+('COORDINATOR'),  -- #3: Autoridade para preenchimento e coordenação
+('TEACHER');      -- #4: Autoridade apenas para preenchimento
+
 SELECT * FROM roles;
+
+-- Permissões do TEACHER (#4)
+INSERT INTO roles_permissions (role_id, permission_id) VALUES
+(4, 1), 
+(4, 4); 
+
+-- Permissões do COORDINATOR (#3)
+INSERT INTO roles_permissions (role_id, permission_id) VALUES
+(3, 1),
+(3, 3), 
+(3, 4), 
+(3, 5); 
+
+-- Permissões do NITE (#2)
+INSERT INTO roles_permissions (role_id, permission_id) VALUES
+(2, 1), 
+(2, 2), 
+(2, 3), 
+(2, 4), 
+(2, 5), 
+(2, 6), 
+(2, 7), 
+(2, 8); 
+
+-- Permissões do ADMIN (#1)
+INSERT INTO roles_permissions (role_id, permission_id) VALUES
+(1, 1), 
+(1, 2), 
+(1, 3), 
+(1, 4), 
+(1, 5), 
+(1, 6), 
+(1, 7), 
+(1, 8), 
+(1, 9); 
 
 SELECT * FROM roles_permissions;
