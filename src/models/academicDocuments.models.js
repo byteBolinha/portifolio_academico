@@ -46,11 +46,42 @@ class AcademicDocuments {
         );
     }
 
-    //atualizar o link do Drive quando o documento for gerado, deve ser importante.
+    //atualizar o link do Drive quando o documento for gerado
     static async updateDriveLink(db, id, link) {
         return await db.query(
             `UPDATE academic_documents SET drive_link = ? WHERE id_academicD = ?`,
             [link, id]
         );
+    }
+
+
+    // FINDs
+    static async findByCompetency(db, competency_id){
+        const [result] = await db.query(
+            `SELECT * FROM academic_documents WHERE competency_id = ?`,
+            [competency_id]
+        );
+        return result;
+    }
+    static async findAll(db){
+        return await db.query(
+            `SELECT * FROM academic_documents`
+        );
+    };
+    static async findById(db, id) {
+        const [result] = await db.query(
+            `SELECT * FROM academic_documents WHERE id_academicD = ?`,
+            [id]
+        );
+        return result[0];
+    };
+
+    //DELET
+    static async deletById(db, id) {
+        const [result] = await db.query(
+            `DELETE FROM academic_documents WHERE id_academicD = ?`,
+            [id]
+        );
+        return result.affectedRows > 0;
     }
 }
