@@ -13,7 +13,7 @@ INSERT INTO permissions (name_permissions) VALUES
 ('FLAG_AVALIADO_GESTAO'),    
 ('FLAG_CANVAS_INTEGRATION'),  
 ('MANAGE_LINKS_DRIVE'),      
-('MANAGE_PERMISSIONS');      
+('MANAGE_PERMISSIONS');
 
 SELECT * FROM permissions;
 
@@ -26,19 +26,19 @@ INSERT INTO roles (name_roles) VALUES
 SELECT * FROM roles;
 
 -- Permissões do TEACHER (#4)
-INSERT INTO roles_permissions (role_id, permission_id) VALUES
+INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
 (4, 1), 
 (4, 4); 
 
 -- Permissões do COORDINATOR (#3)
-INSERT INTO roles_permissions (role_id, permission_id) VALUES
+INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
 (3, 1),
 (3, 3), 
 (3, 4), 
 (3, 5); 
 
 -- Permissões do NITE (#2)
-INSERT INTO roles_permissions (role_id, permission_id) VALUES
+INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
 (2, 1), 
 (2, 2), 
 (2, 3), 
@@ -49,7 +49,7 @@ INSERT INTO roles_permissions (role_id, permission_id) VALUES
 (2, 8); 
 
 -- Permissões do ADMIN (#1)
-INSERT INTO roles_permissions (role_id, permission_id) VALUES
+INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
 (1, 1), 
 (1, 2), 
 (1, 3), 
@@ -61,3 +61,16 @@ INSERT INTO roles_permissions (role_id, permission_id) VALUES
 (1, 9); 
 
 SELECT * FROM roles_permissions;
+
+-- Necessidades pontuais / Rafael.
+
+INSERT INTO permissions (name_permissions) VALUES
+('CRIAR_TIPO_DE_DOCUMENTO');
+INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
+(2, 10);
+
+INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
+(1, 10);
+
+INSERT INTO permissions (name_permissions) VALUES('LIBERAR_CUSTOMIZACAO');
+INSERT INTO permissions (name_permissions) VALUES('DELET_DOCUMENT')

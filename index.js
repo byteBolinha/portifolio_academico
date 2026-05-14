@@ -1,7 +1,7 @@
 const express = require('express');
 const connectDB = require('./src/config/db')
-// const swaggerUi = require('swagger-ui-express')
-// const swaggerSpec = require('./src/config/swagger')
+const swaggerUi = require('swagger-ui-express')
+const swaggerSpec = require('./src/config/swagger')
 const PORT = 3000;
 
 const app = express();
@@ -12,6 +12,13 @@ app.use(express.json());
 const injectDb = require('./src/middleware/db.middleware');
 app.use(injectDb);
 app.use('/auth', authRoutes);
+const competencyRoutes = require('./src/routes/competency.routes');
+const documentTypeRoutes = require('./src/routes/documentType.routes');
+const academicDocumentsRoutes = require('./src/routes/academicDocuments.routes');
+
+app.use('/competency', competencyRoutes);
+app.use('/document-types', documentTypeRoutes);
+app.use('/academic-documents', academicDocumentsRoutes);
 
 
 app.listen(PORT, () =>{

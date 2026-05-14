@@ -21,3 +21,5 @@ const requirePermissions = (permissionName) => {
 
     };
 }
+
+module.exports = requirePermissions;
