@@ -46,6 +46,16 @@ class AcademicDocuments {
         );
     }
 
+    static async updateTrimestre(db, id, trimestre) {
+    return await db.query(
+        `UPDATE academic_documents 
+         SET trimestre = ? 
+         WHERE id_academicD = ?`,
+        [trimestre, id]
+    );
+}
+    
+
     //atualizar o link do Drive quando o documento for gerado
     static async updateDriveLink(db, id, link) {
         return await db.query(
@@ -85,3 +95,5 @@ class AcademicDocuments {
         return result.affectedRows > 0;
     }
 }
+
+module.exports = AcademicDocuments;

@@ -83,6 +83,36 @@ router.patch('/:id/flag/canvas', Auth, requirePermissions('FLAG_CANVAS_INTEGRATI
     }
 });
 
+router.patch('/:id/trimestre', async (req, res) => {
+    try {
+
+      
+
+        const { trimestre } = req.body;
+
+        const result = await AcademicDocuments.updateTrimestre(
+            req.db,
+            req.params.id,
+            trimestre
+        );
+
+        console.log(result);
+
+        res.status(200).json({
+            message: "Trimestre atualizado."
+        });
+
+    } catch (err) {
+
+        console.error("ERRO REAL:");
+        console.error(err);
+
+        res.status(500).json({
+            error: err.message
+        });
+    }
+});
+
 
 router.patch('/:id/drive-link', Auth, requirePermissions('MANAGE_LINKS_DRIVE'), async (req, res) => {
     try {
