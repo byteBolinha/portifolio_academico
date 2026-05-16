@@ -16,7 +16,7 @@ const requirePermissions = (permissionName) => {
         }return res.status(403).json({message: 'Permissão insuficiente'})
 
         } catch (err) {
-            return res.status(500).json({ message: 'Erro ao validar permissões', error });  
+            return res.status(500).json({ message: 'Erro ao validar permissões', err });  
         }
 
     };
