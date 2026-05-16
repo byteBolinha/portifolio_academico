@@ -52,7 +52,12 @@ class Competency {
 
   static async findById(db, id) {
     const [result] = await db.query(
-      `SELECT * FROM competency WHERE id_competency = ?`,
+      `SELECT 
+  id_competency,
+  name_competency,
+  code_competency
+FROM competency
+WHERE course_id = ?`,
       [id],
     );
     return result;

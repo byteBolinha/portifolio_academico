@@ -20,10 +20,14 @@ app.use('/auth', authRoutes);
 const competencyRoutes = require('./src/routes/competency.routes');
 const documentTypeRoutes = require('./src/routes/documentTypes.routes');
 const academicDocumentsRoutes = require('./src/routes/academicDocuments.routes');
+const coursesRoutes = require("./src/routes/course.routes");
+
+
 
 app.use('/competency', competencyRoutes);
 app.use('/document-types', documentTypeRoutes);
 app.use('/academic-documents', academicDocumentsRoutes);
+app.use("/courses", coursesRoutes);
 
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
