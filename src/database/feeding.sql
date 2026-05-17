@@ -74,3 +74,10 @@ INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
 
 INSERT INTO permissions (name_permissions) VALUES('LIBERAR_CUSTOMIZACAO');
 INSERT INTO permissions (name_permissions) VALUES('DELET_DOCUMENT')
+
+
+SELECT * FROM users;
+
+CREATE VIEW view_uer_permissions{
+    
+}
