@@ -10,7 +10,6 @@ class User{
         this.created_at = created_at;
     }
 
-    //padrão, criamos aqui:
     static async create(db, user) {
         const [result] = await db.query(
             `INSERT INTO users (microsoft_id, email_users, name_users, roles_id)
@@ -21,11 +20,10 @@ class User{
         return result.insertId;
     }
 
-    //valida se o usuário da microsoft já foi criado na nossa relação:
     static async findByMicrosoftId(db, microsoft_id,){
         const [result] = await db.query(
             `SELECT * FROM users WHERE microsoft_id=?`, [microsoft_id]
-        ) //os erros é em relação a lista, ele volta uma vazia (se não encontrar nada) e é true.
+        ) 
 
         if(result.length === 0){
             return null;
@@ -33,6 +31,26 @@ class User{
         return result[0];
     }
 
+    static async findPermissionsByRoleId(db, role_id){
+        try {
+            const [result] = await db.query(
+            'SELECT p.name_permissions FROM permissions p JOIN roles_permissions rp ON rp.permissions_id = p.id_permissions WHERE rp.roles_id = ?',
+            [role_id]
+        )
+        if (result.length === 0){
+            return null;
+        }
+        const permissions = [];
+        for(const row of result){
+            permissions.push(row.name_permissions);
+        }
+        return permissions;
+
+        } catch (err) {
+            return false;
+        }
+        
+    }
 }
 
 module.exports = User;

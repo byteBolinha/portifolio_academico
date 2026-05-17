@@ -28,16 +28,20 @@ router.post('/login', async (req, res) => {
             
             user = await User.findByMicrosoftId(req.db, microsoftUser.id);
         }
+        const permissions = await User.findPermissionsByRoleId(req.db, user.roles_id);
+
         const jwtToken = jwt.sign(
             {
                 user_id: user.id_users,
                 role_id: user.roles_id,
-                email:   user.email_users
+                email:   user.email_users,
+                permissions: permissions
             },
             process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_EXPIRES }
         );
         return res.status(200).json({ token: jwtToken });
+        
     } catch (error) {
         console.error("Erro no processo de login:", error);
         return res.status(500).json({ message: "Erro interno no servidor." });

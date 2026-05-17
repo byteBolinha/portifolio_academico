@@ -1,25 +1,21 @@
-const requirePermissions = (permissionName) => {
-    return async (req, res, next) => {
+const requirePermission = (permissionName) => {
+    // Nativa agora no JWT, só requeriar a função do user.model.
+    return (req, res, next) => {
         try {
-            const [result] = await req.db.query(
-            `SELECT p.name_permissions 
-            FROM roles_permissions rp
-            JOIN permissions p ON rp.permissions_id = p.id_permissions
-            WHERE rp.roles_id = ?`,
-            [req.user.roles_id]
-        );
-        const filtered = result.some(p => p.name_permissions === permissionName) //tirar da lista
+            if (!req.user || !req.user.permissions) {
+                return res.status(403).json({ message: "Acesso negado. Nenhuma permissão encontrada." });
+            }
+            const hasPermission = req.user.permissions.includes(permissionName);
+            if (hasPermission) {
+                return next();
+            }
+            return res.status(403).json({ message: "Permissão insuficiente." });
 
-        if(filtered){
-            return next();
-
-        }return res.status(403).json({message: 'Permissão insuficiente'})
-
-        } catch (err) {
-            return res.status(500).json({ message: 'Erro ao validar permissões', error });  
+        } catch (error) {
+            console.error("Erro no middleware de permissão:", error);
+            return res.status(500).json({ message: "Erro interno ao validar permissões." });
         }
-
     };
-}
+};
 
-module.exports = requirePermissions;
+module.exports = requirePermission;

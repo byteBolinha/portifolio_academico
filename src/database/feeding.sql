@@ -77,7 +77,3 @@ INSERT INTO permissions (name_permissions) VALUES('DELET_DOCUMENT')
 
 
 SELECT * FROM users;
-
-CREATE VIEW view_uer_permissions{
-    
-}
