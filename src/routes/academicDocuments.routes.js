@@ -4,7 +4,7 @@ const Auth = require('../middleware/jwt.middleware');
 const AcademicDocuments = require('../models/academicDocuments.model');
 const requirePermissions = require('../middleware/requirePermission.middleware');
 
-router.post('/', Auth, requirePermissions('CRIAR_COMPETENCIA'), async (req, res) => {
+router.post('/', Auth, requirePermissions('CRIAR_DOCUMENTO'), async (req, res) => {
     try {
         const { name, competency_id, documentType_id, matriz, trimestre } = req.body;
         const result = await AcademicDocuments.create(req.db, { name, competency_id, documentType_id, matriz, trimestre });

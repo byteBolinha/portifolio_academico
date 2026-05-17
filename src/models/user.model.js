@@ -51,6 +51,58 @@ class User{
         }
         
     }
-}
 
+    static async findAllUsers(db){
+        try {
+            const [result] = await db.query(
+            'SELECT * FROM users'
+            );
+            return result.length ? result : null;
+
+        } catch (err) {
+            return false;
+        }
+        
+    }
+
+    static async updateRole(db, id, role_id) {
+        try {
+            const [result] = await db.query(
+                'UPDATE users SET roles_id = ? WHERE id_users = ?',
+                [role_id, id]
+            );
+            return result;
+
+        } catch (err) {
+            console.error(err);
+            return false;
+        }
+    }
+
+ static async enrollInCourse(db, user_id, course_id) {
+        try {
+            const [result] = await db.query(
+                'INSERT INTO users_courses (id_users, id_courses) VALUES (?, ?)',
+                [user_id, course_id]
+            );
+            return result;
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
+    }
+    
+    static async deactivateUser(db, id) {
+        try {
+            const [result] = await db.query(
+                'UPDATE users SET active = 0 WHERE id_users = ?',
+                [id]
+            );
+            return result;
+        } catch (err) {
+            console.error(err);
+            return false;
+        }
+    }
+}
 module.exports = User;

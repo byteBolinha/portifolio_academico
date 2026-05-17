@@ -15,13 +15,15 @@ app.use('/auth', authRoutes);
 const competencyRoutes = require('./src/routes/competency.routes');
 const documentTypeRoutes = require('./src/routes/documentTypes.routes');
 const academicDocumentsRoutes = require('./src/routes/academicDocuments.routes');
+const userRoutes = require('./src/routes/users.routes')
 
 app.use('/competency', competencyRoutes);
 app.use('/document-types', documentTypeRoutes);
 app.use('/academic-documents', academicDocumentsRoutes);
 
-
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/users', userRoutes);
+
 app.listen(PORT, () =>{
     console.log(`servidor rodando na porta ${PORT}`);
 })
