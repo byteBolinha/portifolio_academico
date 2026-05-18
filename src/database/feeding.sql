@@ -122,3 +122,5 @@ INSERT INTO permissions (name_permissions) VALUES ('DELETE_COURSE');
 
 INSERT IGNORE INTO roles_permissions (roles_id, permissions_id)
 VALUES (1, 18);
+
+INSERT INTO document_types (name_documentType) VALUES ('planner'), ('planner_educacional')

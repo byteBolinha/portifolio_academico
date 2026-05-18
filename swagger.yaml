@@ -1,683 +1,198 @@
-openapi: 3.0.0
-
+openapi: 3.0.3
 info:
-  title: Portfólio Acadêmico API
+  title: API de Gestão Acadêmica - Unifacisa
+  description: API para gerenciamento de documentos acadêmicos, competências, cursos e usuários com integração Microsoft SSO.
   version: 1.0.0
-  description: |
-    API do sistema de portfólio acadêmico. Autenticação via SSO Microsoft Azure AD +
-    JWT interno com RBAC. Envie o token no header `Authorization: Bearer <token>`.
 
 servers:
   - url: http://localhost:3000
-    description: Desenvolvimento local
+    description: Servidor de Desenvolvimento
 
+# Configuração de Segurança
 components:
   securitySchemes:
-    bearerAuth:
+    MicrosoftAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: "Token da Microsoft Graph (Ex: Bearer {token_da_microsoft})"
+    BearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
+      description: "JWT retornado pela rota /login após validação"
 
   schemas:
-    # ─── Auth ──────────────────────────────────────────────────────────────────
-    LoginRequest:
-      type: object
-      required: [microsoft_id, email, name]
-      properties:
-        microsoft_id:
-          type: string
-          example: "aad-object-id-abc123"
-        email:
-          type: string
-          format: email
-          example: "professor@instituicao.edu.br"
-        name:
-          type: string
-          example: "João Silva"
-        role_id:
-          type: integer
-          example: 3
-          description: "Opcional na criação. Se ausente, usa o default do banco."
-
-    LoginResponse:
+    # --- MODELS BASEADOS NOS SEUS ARQUIVOS .MODEL.JS ---
+    User:
       type: object
       properties:
-        token:
-          type: string
-          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-
-    # ─── DocumentType ──────────────────────────────────────────────────────────
-    DocumentTypeCreate:
-      type: object
-      required: [name_documentType]
-      properties:
-        name_documentType:
-          type: string
-          example: "Plano de Ensino"
-
-    DocumentType:
-      type: object
-      properties:
-        id_documentType:
-          type: integer
-          example: 1
-        name_documentType:
-          type: string
-          example: "Plano de Ensino"
-
-    # ─── Competency ────────────────────────────────────────────────────────────
-    CompetencyCreate:
-      type: object
-      required: [name_competency, courses_id]
-      properties:
-        name_competency:
-          type: string
-          example: "Desenvolver soluções de software orientadas a objetos"
-        courses_id:
-          type: integer
-          example: 2
-
-    Competency:
-      type: object
-      properties:
-        id_competency:
-          type: integer
-          example: 10
-        name_competency:
-          type: string
-          example: "Desenvolver soluções de software orientadas a objetos"
-        course_id:
-          type: integer
-          example: 2
-        code_competency:
-          type: string
-          example: "COMP-001"
-
-    # ─── AcademicDocument ──────────────────────────────────────────────────────
-    AcademicDocumentCreate:
-      type: object
-      required: [name, competency_id, documentType_id, matriz, trimestre]
-      properties:
-        name:
-          type: string
-          example: "Plano de Ensino - POO - 2024/1"
-        competency_id:
-          type: integer
-          example: 10
-        documentType_id:
-          type: integer
-          example: 1
-        matriz:
-          type: string
-          example: "2023"
-        trimestre:
-          type: integer
-          example: 1
+        id_users: { type: integer, example: 1 }
+        microsoft_id: { type: string }
+        email_users: { type: string, format: email }
+        name_users: { type: string }
+        roles_id: { type: integer }
+        active: { type: integer, example: 1 }
 
     AcademicDocument:
       type: object
       properties:
-        id_academicD:
-          type: integer
-          example: 55
-        name_academicD:
-          type: string
-          example: "Plano de Ensino - POO - 2024/1"
-        competency_id:
-          type: integer
-          example: 10
-        id_documentType:
-          type: integer
-          example: 1
-        matriz:
-          type: string
-          example: "2023"
-        trimestre:
-          type: integer
-          example: 1
-        flag_liberado_customizar:
-          type: boolean
-          example: false
-        flag_preenchido:
-          type: boolean
-          example: false
-        flag_validacao_coordenacao:
-          type: boolean
-          example: false
-        flag_integrado_rm:
-          type: boolean
-          example: false
-        flag_disponivel_canva:
-          type: boolean
-          example: false
-        drive_link:
-          type: string
-          nullable: true
-          example: "https://drive.google.com/..."
+        id_academicD: { type: integer }
+        name_academicD: { type: string }
+        competency_id: { type: integer }
+        id_documentType: { type: integer }
+        matriz: { type: string }
+        trimestre: { type: integer }
+        drive_link: { type: string }
+        flag_liberado_customizar: { type: integer }
+        flag_preenchido: { type: integer }
+        flag_validacao_coordenacao: { type: integer }
+        flag_integrado_rm: { type: integer }
+        flag_disponivel_canva: { type: integer }
 
-    FlagUpdate:
-      type: object
-      required: [status]
-      properties:
-        status:
-          type: boolean
-          example: true
-
-    DriveLinkUpdate:
-      type: object
-      required: [link]
-      properties:
-        link:
-          type: string
-          example: "https://drive.google.com/file/d/abc123"
-
-    # ─── Respostas genéricas ───────────────────────────────────────────────────
-    MessageResponse:
+    Course:
       type: object
       properties:
-        message:
-          type: string
-          example: "Operação realizada com sucesso."
+        id_courses: { type: integer }
+        name_courses: { type: string }
+        launch_date_courses: { type: string, format: date }
+        course_icon_url: { type: string }
+        active: { type: integer }
 
-    CreatedResponse:
+    Competency:
       type: object
       properties:
-        id:
-          type: integer
-          example: 42
-        message:
-          type: string
-          example: "Recurso criado."
+        id_competency: { type: integer }
+        name_competency: { type: string }
+        course_id: { type: integer }
+        code_competency: { type: string }
 
-    ErrorResponse:
-      type: object
-      properties:
-        error:
-          type: string
-          example: "Mensagem de erro interno."
-
-  responses:
-    Unauthorized:
-      description: Token ausente ou inválido.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/MessageResponse'
-    Forbidden:
-      description: Permissão insuficiente para esta operação.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/MessageResponse'
-    NotFound:
-      description: Recurso não encontrado.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/MessageResponse'
-    InternalError:
-      description: Erro interno do servidor.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-
-security:
-  - bearerAuth: []
-
-# ═══════════════════════════════════════════════════════════════════════════════
+# --- DEFINIÇÃO DAS ROTAS ---
 paths:
-
-  # ─── Auth ───────────────────────────────────────────────────────────────────
-  /auth/login:
+  # AUTENTICAÇÃO
+  /login:
     post:
       tags: [Auth]
-      summary: Login via SSO Microsoft
-      description: |
-        Recebe os dados do usuário vindos do token Microsoft. Se o usuário não
-        existir no banco, é criado automaticamente. Retorna o JWT interno com RBAC.
-      security: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/LoginRequest'
+      summary: Realiza login via Microsoft SSO
+      security:
+        - MicrosoftAuth: []
       responses:
         '200':
-          description: JWT gerado com sucesso.
+          description: Sucesso. Retorna o JWT interno do sistema.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginResponse'
-        '500':
-          $ref: '#/components/responses/InternalError'
-
-  # ─── Document Types ─────────────────────────────────────────────────────────
-  /document-types:
-    post:
-      tags: [Tipos de Documento]
-      summary: Criar tipo de documento
-      description: Requer permissão `CRIAR_TIPO_DE_DOCUMENTO`.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DocumentTypeCreate'
-      responses:
-        '201':
-          description: Tipo criado.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreatedResponse'
-        '400':
-          description: Nome é obrigatório.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageResponse'
+                type: object
+                properties:
+                  token: { type: string }
         '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalError'
+          description: Token Microsoft inválido ou não fornecido.
 
-    get:
-      tags: [Tipos de Documento]
-      summary: Listar todos os tipos de documento
-      description: Requer permissão `READ_ALL`.
-      responses:
-        '200':
-          description: Lista de tipos de documento.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/DocumentType'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalError'
-
-  # ─── Competencies ────────────────────────────────────────────────────────────
-  /competencies:
-    post:
-      tags: [Competências]
-      summary: Criar competência
-      description: Requer permissão `CRIAR_COMPETENCIA`.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CompetencyCreate'
-      responses:
-        '201':
-          description: Competência criada.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreatedResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalError'
-
-  /competencies/course/{course_id}:
-    get:
-      tags: [Competências]
-      summary: Buscar competências por curso
-      description: Requer permissão `READ_ALL`.
-      parameters:
-        - name: course_id
-          in: path
-          required: true
-          schema:
-            type: integer
-          example: 2
-      responses:
-        '200':
-          description: Lista de competências do curso.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Competency'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalError'
-
-  /competencies/{id}:
-    get:
-      tags: [Competências]
-      summary: Buscar competência por ID
-      description: Requer permissão `READ_ALL`.
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-          example: 10
-      responses:
-        '200':
-          description: Competência encontrada.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Competency'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalError'
-
-  # ─── Academic Documents ──────────────────────────────────────────────────────
+  # DOCUMENTOS ACADÊMICOS
   /academic-documents:
     post:
-      tags: [Documentos Acadêmicos]
-      summary: Criar documento acadêmico
-      description: Requer permissão `CRIAR_COMPETENCIA`.
+      tags: [Academic Documents]
+      summary: Cria um novo documento acadêmico
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AcademicDocumentCreate'
+              type: object
+              properties:
+                name: { type: string }
+                competency_id: { type: integer }
+                documentType_id: { type: integer }
+                matriz: { type: string }
+                trimestre: { type: integer }
       responses:
         '201':
           description: Documento criado.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreatedResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalError'
-
-  /academic-documents/competency/{competency_id}:
-    get:
-      tags: [Documentos Acadêmicos]
-      summary: Buscar documentos por competência
-      description: Requer permissão `READ_ALL`.
-      parameters:
-        - name: competency_id
-          in: path
-          required: true
-          schema:
-            type: integer
-          example: 10
-      responses:
-        '200':
-          description: Lista de documentos acadêmicos da competência.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AcademicDocument'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalError'
 
   /academic-documents/{id}:
     get:
-      tags: [Documentos Acadêmicos]
-      summary: Buscar documento acadêmico por ID
-      description: Requer permissão `READ_ALL`.
+      tags: [Academic Documents]
+      summary: Busca documento por ID
+      security: [{ BearerAuth: [] }]
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: integer
-          example: 55
-      responses:
-        '200':
-          description: Documento encontrado.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AcademicDocument'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalError'
-
+          schema: { type: integer }
     delete:
-      tags: [Documentos Acadêmicos]
-      summary: Remover documento acadêmico
-      description: Requer permissão `DELET_DOCUMENT`.
+      tags: [Academic Documents]
+      summary: Remove um documento
+      security: [{ BearerAuth: [] }]
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: integer
-          example: 55
-      responses:
-        '200':
-          description: Documento removido.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalError'
+          schema: { type: integer }
 
+  # FLAGS E LINKS (PATCHES)
   /academic-documents/{id}/flag/customizar:
     patch:
-      tags: [Documentos Acadêmicos - Flags]
-      summary: Atualizar flag "liberado para customizar"
-      description: Requer permissão `LIBERAR_CUSTOMIZACAO`.
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+      tags: [Academic Documents]
+      security: [{ BearerAuth: [] }]
+      parameters: [{ name: id, in: path, required: true, schema: { type: integer } }]
       requestBody:
-        required: true
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/FlagUpdate'
-      responses:
-        '200':
-          description: Flag atualizada.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalError'
-
-  /academic-documents/{id}/flag/preenchido:
-    patch:
-      tags: [Documentos Acadêmicos - Flags]
-      summary: Atualizar flag "preenchido"
-      description: Requer permissão `FLAG_PREENCHIDO`.
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FlagUpdate'
-      responses:
-        '200':
-          description: Flag atualizada.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalError'
-
-  /academic-documents/{id}/flag/coordenacao:
-    patch:
-      tags: [Documentos Acadêmicos - Flags]
-      summary: Atualizar flag de validação da coordenação
-      description: Requer permissão `FLAG_AVALIADO_COORD`.
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FlagUpdate'
-      responses:
-        '200':
-          description: Flag atualizada.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalError'
-
-  /academic-documents/{id}/flag/gestao:
-    patch:
-      tags: [Documentos Acadêmicos - Flags]
-      summary: Atualizar flag de integração com RM (gestão)
-      description: Requer permissão `FLAG_AVALIADO_GESTAO`.
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FlagUpdate'
-      responses:
-        '200':
-          description: Flag atualizada.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalError'
-
-  /academic-documents/{id}/flag/canvas:
-    patch:
-      tags: [Documentos Acadêmicos - Flags]
-      summary: Atualizar flag de disponibilidade no Canvas
-      description: Requer permissão `FLAG_CANVAS_INTEGRATION`.
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FlagUpdate'
-      responses:
-        '200':
-          description: Flag atualizada.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalError'
+            schema: { type: object, properties: { status: { type: integer } } }
 
   /academic-documents/{id}/drive-link:
     patch:
-      tags: [Documentos Acadêmicos]
-      summary: Atualizar link do Google Drive
-      description: Requer permissão `MANAGE_LINKS_DRIVE`.
+      tags: [Academic Documents]
+      security: [{ BearerAuth: [] }]
+      parameters: [{ name: id, in: path, required: true, schema: { type: integer } }]
+      requestBody:
+        content:
+          application/json:
+            schema: { type: object, properties: { link: { type: string } } }
+
+  # CURSOS
+  /courses:
+    get:
+      tags: [Courses]
+      summary: Lista todos os cursos
+      security: [{ BearerAuth: [] }]
+    post:
+      tags: [Courses]
+      summary: Cria um novo curso
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                created_at: { type: string, format: date }
+                course_icon: { type: string }
+
+  # USUÁRIOS
+  /users:
+    get:
+      tags: [Users]
+      summary: Lista todos os usuários
+      security: [{ BearerAuth: [] }]
+  
+  /users/{id}/role:
+    patch:
+      tags: [Users]
+      summary: Altera a role de um usuário
+      security: [{ BearerAuth: [] }]
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: integer
+          schema: { type: integer }
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DriveLinkUpdate'
-      responses:
-        '200':
-          description: Link atualizado.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalError'
+              type: object
+              properties:
+                role_id: { type: integer }
