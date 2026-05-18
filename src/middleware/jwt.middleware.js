@@ -3,18 +3,42 @@ const jwt = require('jsonwebtoken');
 const Auth = (req, res, next) => {
 
 
-    if (process.env.SKIP_AUTH === "true") {
-        req.user = {
-            id: 1,
-            roles_id: 1,
-            role: "admin",
-            permissions: [
-                "CRIAR_COMPETENCIA",
-                "READ_ALL"
-            ]
-        };
-        return next();
+   if (process.env.SKIP_AUTH === "true") {
+
+    const role = process.env.MOCK_ROLE || "ADMIN";
+
+    const users = {
+    ADMIN: {
+        id: 1,
+        roles_id: 1,
+        role: "ADMIN",
+        permissions: [
+            "CRIAR_COMPETENCIA",
+            "READ_ALL",
+            "LIBERAR_CUSTOMIZACAO",
+            "FLAG_PREENCHIDO",
+            "FLAG_AVALIADO_COORD",
+            "FLAG_AVALIADO_GESTAO",
+            "FLAG_CANVAS_INTEGRATION",
+            "MANAGE_LINKS_DRIVE",
+            "DELET_DOCUMENT"
+        ]
+    },
+
+    PROFESSOR: {
+        id: 2,
+        roles_id: 2,
+        role: "PROFESSOR",
+        permissions: [
+            "READ_ALL"
+        ]
     }
+};
+
+    req.user = users[role];
+
+    return next();
+}
 
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
