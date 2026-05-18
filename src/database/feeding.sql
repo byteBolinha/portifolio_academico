@@ -109,3 +109,16 @@ VALUES
 (1,14),
 (1,15),
 (1,16);
+
+ALTER TABLE courses ADD COLUMN active TINYINT(1) DEFAULT 1;
+
+SELECT * FROM permissions;
+
+INSERT INTO permissions (name_permissions) VALUES ('DELETAR_CURSO');
+
+DELETE FROM permissions WHERE name_permissions = 'DELETAR_CURSO';
+
+INSERT INTO permissions (name_permissions) VALUES ('DELETE_COURSE');
+
+INSERT IGNORE INTO roles_permissions (roles_id, permissions_id)
+VALUES (1, 18);
