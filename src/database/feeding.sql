@@ -74,3 +74,7 @@ INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
 
 INSERT INTO permissions (name_permissions) VALUES('LIBERAR_CUSTOMIZACAO');
 INSERT INTO permissions (name_permissions) VALUES('DELET_DOCUMENT')
+
+-- Mudar o nome da coluna para matrix_courses, pois deu conflito no back e no front / Lavinia.
+ALTER TABLE courses
+CHANGE matrix_courses VARCHAR(50);

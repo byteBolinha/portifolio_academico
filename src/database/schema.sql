@@ -22,7 +22,7 @@ CREATE TABLE roles_permissions(
 CREATE TABLE courses(
     id_courses INT AUTO_INCREMENT PRIMARY KEY,
     name_courses VARCHAR(255),
-    launch_date_courses TIMESTAMP,
+    matrix_courses VARCHAR(50),
     created_at_courses TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     course_icon_url VARCHAR(300)
 

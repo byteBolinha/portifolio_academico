@@ -35,7 +35,7 @@ class Course {
         created_at_courses,
         course_icon_url
       FROM courses
-      ORDER BY id_courses DESC
+      ORDER BY id_courses ASC
       `,
     );
 
