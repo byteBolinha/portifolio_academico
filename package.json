@@ -20,6 +20,7 @@
     "js-yaml": "^4.1.1",
     "jsonwebtoken": "^9.0.3",
     "ldapjs": "^3.0.7",
+    "multer": "^2.1.1",
     "mysql2": "^3.22.3",
     "passport": "^0.7.0",
     "passport-ldapauth": "^3.0.1",
