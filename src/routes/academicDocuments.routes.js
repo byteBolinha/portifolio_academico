@@ -64,6 +64,7 @@ router.post("/", async (req, res) => {
   }
 });
 
+
 router.get('/competency/:competency_id', Auth, requirePermissions('READ_ALL'), async (req, res) => {
     try {
         const results = await AcademicDocuments.findByCompetency(req.db, req.params.competency_id);
@@ -183,5 +184,59 @@ router.delete('/:id', Auth, requirePermissions('DELET_DOCUMENT'), async (req, re
         res.status(500).json({ error: err.message });
     }
 });
+
+router.patch("/:id", async (req, res) => {
+  try {
+    const { name_competency, course_id, code_competency } = req.body;
+
+    await Competency.update(req.db, {
+      id: req.params.id,
+      name: name_competency,
+      course_id,
+      code_competency,
+    });
+
+    res.status(200).json({ message: "Competência atualizada" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.patch("/:id/documents", async (req, res) => {
+  try {
+    const { planner_link, teaching_plan_link, trimestre, matriz } = req.body;
+
+    await AcademicDocuments.updateByCompetencyAndType(
+      req.db,
+      req.params.id,
+      1,
+      {
+        drive_link: planner_link,
+        trimestre,
+        matriz,
+      }
+    );
+
+    await AcademicDocuments.updateByCompetencyAndType(
+      req.db,
+      req.params.id,
+      2,
+      {
+        drive_link: teaching_plan_link,
+        trimestre,
+        matriz,
+      }
+    );
+
+    res.status(200).json({ message: "Documentos atualizados" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+
+
+
 
 module.exports = router;

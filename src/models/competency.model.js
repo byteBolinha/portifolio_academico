@@ -14,6 +14,22 @@ class Competency {
     return result;
   }
 
+  static async update(db, competency) {
+  const [result] = await db.query(
+    `UPDATE competency
+     SET name_competency = ?, course_id = ?, code_competency = ?
+     WHERE id_competency = ?`,
+    [
+      competency.name,
+      competency.course_id,
+      competency.code_competency,
+      competency.id,
+    ]
+  );
+
+  return result;
+}
+
   static async findByCourse(db, course_id) {
     const [result] = await db.query(
       `
@@ -58,5 +74,7 @@ class Competency {
     return result;
   }
 }
+
+
 
 module.exports = Competency;
