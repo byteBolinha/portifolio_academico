@@ -1,0 +1,20 @@
+INSERT INTO courses (name_courses, matriz_courses, course_icon_url)
+VALUES
+('Administração', '62', 'http://localhost:3000/uploads/administracao.png'),
+('Análise e Desenvolvimento de Sistemas', '63', 'http://localhost:3000/uploads/ads.png'),
+('Arquitetura', '62', 'http://localhost:3000/uploads/arquitetura.png'),
+('Design', '62', 'http://localhost:3000/uploads/design.png'),
+('Direito', '62', 'http://localhost:3000/uploads/direito.png'),
+('Educação Física', '62', 'http://localhost:3000/uploads/educacao-fisica.png'),
+('Enfermagem', '62', 'http://localhost:3000/uploads/enfermagem.png'),
+('Engenharia Civil', '62', 'http://localhost:3000/uploads/engenharia-civil.png'),
+('Farmácia', '62', 'http://localhost:3000/uploads/farmacia.png'),
+('Fisioterapia', '62', 'http://localhost:3000/uploads/fisioterapia.png'),
+('IA', '63', 'http://localhost:3000/uploads/ia.png'),
+('Jogos Digitais', '62', 'http://localhost:3000/uploads/jogos-digitais.png'),
+('Medicina Veterinária', '62', 'http://localhost:3000/uploads/med-vet.png'),
+('Medicina', '62', 'http://localhost:3000/uploads/medicina.png'),
+('Nutrição', '62', 'http://localhost:3000/uploads/nutricao.png'),
+('Odontologia', '62', 'http://localhost:3000/uploads/odontologia.png'),
+('Psicologia', '62', 'http://localhost:3000/uploads/psicologia.png'),
+('Sistemas de Informação', '62', 'http://localhost:3000/uploads/sistemas.png');
