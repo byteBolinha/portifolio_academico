@@ -55,6 +55,7 @@ CREATE TABLE competency(
     name_competency VARCHAR(255) NOT NULL,
     course_id INT NOT NULL,
     code_competency VARCHAR(10) NOT NULL,
+    matriz_competency VARCHAR(50) NOT NULL, 
 
     CONSTRAINT fk_competency_course FOREIGN KEY (course_id) REFERENCES courses(id_courses) ON DELETE CASCADE
 );
