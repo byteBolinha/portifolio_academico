@@ -22,7 +22,6 @@ class AcademicDocuments {
         academicDocuments.name,
         academicDocuments.competency_id,
         academicDocuments.documentType_id,
-        academicDocuments.matriz,
         academicDocuments.trimestre,
         academicDocuments.drive_link,
       ]

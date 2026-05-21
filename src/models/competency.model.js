@@ -18,11 +18,10 @@ class Competency {
   static async update(db, competency) {
   const [result] = await db.query(
     `UPDATE competency
-     SET name_competency = ?, course_id = ?, code_competency = ?
+     SET name_competency = ?, code_competency = ?
      WHERE id_competency = ?`,
     [
       competency.name,
-      competency.course_id,
       competency.code_competency,
       competency.id,
     ]
