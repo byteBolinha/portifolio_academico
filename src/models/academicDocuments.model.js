@@ -1,9 +1,8 @@
 class AcademicDocuments {
-    constructor(name, competency_id, documentType_id, matriz, trimestre) {
+    constructor(name, competency_id, documentType_id, trimestre) {
         this.name = name;
         this.competency_id = competency_id;
         this.documentType_id = documentType_id;
-        this.matriz = matriz;
         this.trimestre = trimestre;
     };
 
@@ -14,11 +13,10 @@ class AcademicDocuments {
         name_academicD,
         competency_id,
         id_documentType,
-        matriz,
         trimestre,
         drive_link
       )
-      VALUES (?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?)
       `,
       [
         academicDocuments.name,
@@ -73,7 +71,6 @@ class AcademicDocuments {
     );
 }
     
-
     //atualizar o link do Drive quando o documento for gerado
     static async updateDriveLink(db, id, link) {
         return await db.query(

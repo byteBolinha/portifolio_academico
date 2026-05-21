@@ -8,24 +8,27 @@ const Competency = require('../models/competency.model');
 router.post("/", async (req, res) => {
   try {
 
+    console.log(req.body);
+
     const {
       name_competency,
       course_id,
       code_competency,
-
       planner_link,
       teaching_plan_link,
-
       trimestre,
-      matriz,
+      matriz_competency,
     } = req.body;
 
-   
+    console.log(matriz_competency);
+
     const competencyResult = await Competency.create(req.db, {
       name: name_competency,
       course_id,
       code_competency,
+      matriz_competency,
     });
+
 
     const competencyId = competencyResult.insertId;
 
@@ -34,7 +37,7 @@ router.post("/", async (req, res) => {
       name: "Planner",
       competency_id: competencyId,
       documentType_id: 1,
-      matriz,
+      matriz_competency,
       trimestre,
       drive_link: planner_link,
     });
@@ -44,7 +47,7 @@ router.post("/", async (req, res) => {
       name: "Plano de Ensino",
       competency_id: competencyId,
       documentType_id: 2,
-      matriz,
+      matriz_competency,
       trimestre,
       drive_link: teaching_plan_link,
     });
@@ -137,26 +140,13 @@ router.patch('/:id/flag/canvas', Auth, requirePermissions('FLAG_CANVAS_INTEGRATI
 router.patch('/:id/trimestre', async (req, res) => {
     try {
 
-      
-
         const { trimestre } = req.body;
 
-        const result = await AcademicDocuments.updateTrimestre(
-            req.db,
-            req.params.id,
-            trimestre
-        );
-
-        console.log(result);
-
+        const result = await AcademicDocuments.updateTrimestre(req.db, req.params.id,trimestre);
         res.status(200).json({
-            message: "Trimestre atualizado."
-        });
+            message: "Trimestre atualizado."});
 
     } catch (err) {
-
-        console.error("ERRO REAL:");
-        console.error(err);
 
         res.status(500).json({
             error: err.message
@@ -204,7 +194,7 @@ router.patch("/:id", async (req, res) => {
 
 router.patch("/:id/documents", async (req, res) => {
   try {
-    const { planner_link, teaching_plan_link, trimestre, matriz } = req.body;
+    const { planner_link, teaching_plan_link, trimestre} = req.body;
 
     await AcademicDocuments.updateByCompetencyAndType(
       req.db,
@@ -213,7 +203,6 @@ router.patch("/:id/documents", async (req, res) => {
       {
         drive_link: planner_link,
         trimestre,
-        matriz,
       }
     );
 
@@ -224,7 +213,6 @@ router.patch("/:id/documents", async (req, res) => {
       {
         drive_link: teaching_plan_link,
         trimestre,
-        matriz,
       }
     );
 
@@ -233,10 +221,6 @@ router.patch("/:id/documents", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
-
-
-
 
 
 module.exports = router;

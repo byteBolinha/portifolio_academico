@@ -1,15 +1,16 @@
 class Competency {
-  constructor(name, course_id, code_competency) {
+  constructor(name, course_id, code_competency,matriz_competency) {
     this.name = name;
     this.course_id = course_id;
     this.code_competency = code_competency;
+    this.matriz_competency = matriz_competency;
   }
 
   static async create(db, competency) {
     const [result] = await db.query(
-      `INSERT INTO competency (name_competency, course_id, code_competency)
-             VALUES(?,?,?)`,
-      [competency.name, competency.course_id, competency.code_competency],
+      `INSERT INTO competency (name_competency, course_id, code_competency, matriz_competency)
+             VALUES(?,?,?,?)`,
+      [competency.name, competency.course_id,  competency.code_competency, competency.matriz_competency,],
     );
     return result;
   }
@@ -37,10 +38,11 @@ class Competency {
       c.id_competency,
       c.name_competency,
       c.code_competency,
+      c.matriz_competency,
 
       a.id_academicD,
       a.name_academicD,
-      a.matriz,
+      
       a.trimestre,
       a.drive_link,
 

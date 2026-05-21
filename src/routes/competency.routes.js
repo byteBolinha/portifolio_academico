@@ -5,13 +5,14 @@ const Auth = require('../middleware/jwt.middleware');
 const requirePermissions = require('../middleware/requirePermission.middleware')
 
 router.post('/', Auth, requirePermissions('CRIAR_COMPETENCIA'), async (req, res) => {
-    const { name_competency, course_id, code_competency } = req.body;
+    const { name_competency, course_id, code_competency, matriz_competency } = req.body;
 
     try {
         const result = await Competency.create(req.db, {
             name: name_competency,
             course_id,
-            code_competency
+            code_competency,
+            matriz_competency
         });
 
         res.status(201).json({
