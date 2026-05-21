@@ -22,7 +22,11 @@ router.get("/", async (req, res) => {
 
     res.status(200).json(results);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+
+    res.status(500).json({
+      message: "Erro ao buscar cursos",
+    });
   }
 });
 
@@ -47,9 +51,18 @@ router.post("/", upload.single("image"), async (req, res) => {
       course_icon_url,
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (err.code === "ER_DUP_ENTRY") {
+      return res.status(400).json({
+        message: "Esse curso já está cadastrado",
+      });
+    }
+
+    console.error(err);
+
+    res.status(500).json({
+      message: "Erro interno do servidor",
+    });
   }
 });
 
 module.exports = router;
-``;
