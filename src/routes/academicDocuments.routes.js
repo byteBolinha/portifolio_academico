@@ -222,5 +222,32 @@ router.patch("/:id/documents", async (req, res) => {
   }
 });
 
+router.patch(
+  '/:id/flag/necessita-revisao',
+  Auth,
+  requirePermissions('NECESSITA_REVISAO'),
+  async (req, res) => {
+    try {
+      const { status } = req.body;
+
+      await AcademicDocuments.updateFlagNecessitaRevisao(
+        req.db,
+        req.params.id,
+        status
+      );
+
+      res.status(200).json({
+        message: "Status de revisão atualizado."
+      });
+
+    } catch (err) {
+
+      res.status(500).json({
+        error: err.message
+      });
+
+    }
+  }
+);
 
 module.exports = router;

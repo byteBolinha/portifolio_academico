@@ -5,66 +5,74 @@ const Auth = (req, res, next) => {
     const role = (process.env.MOCK_ROLE || "ADMIN").toUpperCase();
 
     const users = {
-  ADMIN: {
-    id: 1,
-    roles_id: 1,
-    role: "ADMIN",
-    permissions: [
-      "CRIAR_CURSO",
-      "CRIAR_COMPETENCIA",
-      "READ_ALL",
-      "LIBERAR_CUSTOMIZACAO",
-      "FLAG_PREENCHIDO",
-      "FLAG_AVALIADO_COORD",
-      "FLAG_AVALIADO_GESTAO",
-      "FLAG_CANVAS_INTEGRATION",
-      "MANAGE_LINKS_DRIVE",
-      "MANAGE_PERMISSIONS",
-      "CRIAR_TIPO_DE_DOCUMENTO",
-      "DELET_DOCUMENT",
-    ],
-  },
+      ADMIN: {
+        id: 1,
+        roles_id: 1,
+        role: "ADMIN",
+        permissions: [
+          "CRIAR_CURSO",
+          "CRIAR_COMPETENCIA",
+          "READ_ALL",
 
-  PROFESSOR: {
-    id: 2,
-    roles_id: 2,
-    role: "PROFESSOR",
-    permissions: [
-      "READ_ALL",
-      "FLAG_PREENCHIDO",
-    ],
-  },
+          "FLAG_PREENCHIDO",
+          "NECESSITA_REVISAO",
+          "FLAG_AVALIADO_COORD",
+          "LIBERAR_CUSTOMIZACAO",
+          "FLAG_CANVAS_INTEGRATION",
+          "FLAG_AVALIADO_GESTAO",
 
-  COORDINATOR: {
-    id: 3,
-    roles_id: 3,
-    role: "COORDINATOR",
-    permissions: [
-      "READ_ALL",
-      "CRIAR_COMPETENCIA",
-      "FLAG_PREENCHIDO",
-      "FLAG_AVALIADO_COORD",
-    ],
-  },
+          "MANAGE_LINKS_DRIVE",
+          "MANAGE_PERMISSIONS",
+          "CRIAR_TIPO_DE_DOCUMENTO",
+          "DELET_DOCUMENT",
+        ],
+      },
 
-  NITE: {
-    id: 4,
-    roles_id: 4,
-    role: "NITE",
-    permissions: [
-      "CRIAR_CURSO",
-      "CRIAR_COMPETENCIA",
-      "READ_ALL",
-      "LIBERAR_CUSTOMIZACAO",
-      "FLAG_PREENCHIDO",
-      "FLAG_AVALIADO_COORD",
-      "FLAG_AVALIADO_GESTAO",
-      "FLAG_CANVAS_INTEGRATION",
-      "MANAGE_LINKS_DRIVE",
-      "CRIAR_TIPO_DE_DOCUMENTO",
-    ],
-  },
-};
+      PROFESSOR: {
+        id: 2,
+        roles_id: 2,
+        role: "PROFESSOR",
+        permissions: [
+          "READ_ALL",
+          "FLAG_PREENCHIDO",
+        ],
+      },
+
+      COORDINATOR: {
+        id: 3,
+        roles_id: 3,
+        role: "COORDINATOR",
+        permissions: [
+          "READ_ALL",
+          "CRIAR_COMPETENCIA",
+
+          "FLAG_PREENCHIDO",
+          "NECESSITA_REVISAO",
+          "FLAG_AVALIADO_COORD",
+        ],
+      },
+
+      NITE: {
+        id: 4,
+        roles_id: 4,
+        role: "NITE",
+        permissions: [
+          "CRIAR_CURSO",
+          "CRIAR_COMPETENCIA",
+          "READ_ALL",
+
+          "FLAG_PREENCHIDO",
+          "NECESSITA_REVISAO",
+          "FLAG_AVALIADO_COORD",
+          "LIBERAR_CUSTOMIZACAO",
+          "FLAG_CANVAS_INTEGRATION",
+          "FLAG_AVALIADO_GESTAO",
+
+          "MANAGE_LINKS_DRIVE",
+          "CRIAR_TIPO_DE_DOCUMENTO",
+        ],
+      },
+    };
 
     req.user = users[role];
 
@@ -77,15 +85,27 @@ const Auth = (req, res, next) => {
   const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
-    return res.status(401).json({ message: "Token não foi fornecido" });
+    return res.status(401).json({
+      message: "Token não foi fornecido",
+    });
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    );
+
     req.user = decoded;
+
     next();
+
   } catch (err) {
-    return res.status(403).json({ message: "token invalido ou expirado!" });
+
+    return res.status(403).json({
+      message: "token invalido ou expirado!",
+    });
+
   }
 };
 
