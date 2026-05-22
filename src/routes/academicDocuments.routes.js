@@ -250,4 +250,33 @@ router.patch(
   }
 );
 
+router.patch(
+  '/:id/flag/em-preenchimento',
+  Auth,
+  requirePermissions('EM_PREENCHIMENTO'),
+  async (req, res) => {
+    try {
+
+      const { status } = req.body;
+
+      await AcademicDocuments.updateFlagEmPreenchimento(
+        req.db,
+        req.params.id,
+        status
+      );
+
+      res.status(200).json({
+        message: "Status em preenchimento atualizado."
+      });
+
+    } catch (err) {
+
+      res.status(500).json({
+        error: err.message
+      });
+
+    }
+  }
+);
+
 module.exports = router;

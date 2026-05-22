@@ -15,6 +15,7 @@ const Auth = (req, res, next) => {
           "READ_ALL",
 
           "FLAG_PREENCHIDO",
+          "EM_PREENCHIMENTO",
           "NECESSITA_REVISAO",
           "FLAG_AVALIADO_COORD",
           "LIBERAR_CUSTOMIZACAO",
@@ -35,6 +36,7 @@ const Auth = (req, res, next) => {
         permissions: [
           "READ_ALL",
           "FLAG_PREENCHIDO",
+          "EM_PREENCHIMENTO",
         ],
       },
 
@@ -45,6 +47,7 @@ const Auth = (req, res, next) => {
         permissions: [
           "READ_ALL",
           "CRIAR_COMPETENCIA",
+          "EM_PREENCHIMENTO",
 
           "FLAG_PREENCHIDO",
           "NECESSITA_REVISAO",
@@ -60,6 +63,7 @@ const Auth = (req, res, next) => {
           "CRIAR_CURSO",
           "CRIAR_COMPETENCIA",
           "READ_ALL",
+          "EM_PREENCHIMENTO",
 
           "FLAG_PREENCHIDO",
           "NECESSITA_REVISAO",
