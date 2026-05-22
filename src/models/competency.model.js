@@ -1,5 +1,5 @@
 class Competency {
-  constructor(name, course_id, code_competency,matriz_competency) {
+  constructor(name, course_id, code_competency, matriz_competency) {
     this.name = name;
     this.course_id = course_id;
     this.code_competency = code_competency;
@@ -10,25 +10,26 @@ class Competency {
     const [result] = await db.query(
       `INSERT INTO competency (name_competency, course_id, code_competency, matriz_competency)
              VALUES(?,?,?,?)`,
-      [competency.name, competency.course_id,  competency.code_competency, competency.matriz_competency,],
+      [
+        competency.name,
+        competency.course_id,
+        competency.code_competency,
+        competency.matriz_competency,
+      ],
     );
     return result;
   }
 
   static async update(db, competency) {
-  const [result] = await db.query(
-    `UPDATE competency
+    const [result] = await db.query(
+      `UPDATE competency
      SET name_competency = ?, code_competency = ?
      WHERE id_competency = ?`,
-    [
-      competency.name,
-      competency.code_competency,
-      competency.id,
-    ]
-  );
+      [competency.name, competency.code_competency, competency.id],
+    );
 
-  return result;
-}
+    return result;
+  }
 
   static async findByCourse(db, course_id) {
     const [result] = await db.query(
@@ -45,10 +46,14 @@ class Competency {
       a.trimestre,
       a.drive_link,
 
+      a.flag_em_preenchimento,
+      a.flag_preenchido,
+      a.flag_necessita_revisao,
       a.flag_validacao_coordenacao,
       a.flag_liberado_customizar,
       a.flag_disponivel_canva,
       a.flag_integrado_rm,
+      
 
       dt.name_documentType
 
@@ -75,7 +80,5 @@ class Competency {
     return result;
   }
 }
-
-
 
 module.exports = Competency;
