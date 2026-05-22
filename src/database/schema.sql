@@ -2,12 +2,12 @@
 
 CREATE TABLE permissions (
     id_permissions INT AUTO_INCREMENT PRIMARY KEY,
-    name_permissions VARCHAR(50)
+    name_permissions VARCHAR(50) UNIQUE
 );
 
 CREATE TABLE roles(
     id_roles INT AUTO_INCREMENT PRIMARY KEY,
-    name_roles VARCHAR(50)
+    name_roles VARCHAR(50) UNIQUE
 );
 
 CREATE TABLE roles_permissions(
@@ -21,7 +21,7 @@ CREATE TABLE roles_permissions(
 
 CREATE TABLE courses(
     id_courses INT AUTO_INCREMENT PRIMARY KEY,
-    name_courses VARCHAR(255),
+    name_courses VARCHAR(255) NOT NULL,
     launch_date_courses TIMESTAMP,
     created_at_courses TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at_courses TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -53,7 +53,7 @@ CREATE TABLE users(
 
 CREATE TABLE user_courses(
     user_id   INT,
-    course_id INT,
+    course_id INT NOT NULL,
 
     assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     assigned_by INT,
@@ -68,7 +68,7 @@ CREATE TABLE user_courses(
 CREATE TABLE competency(
     id_competency INT AUTO_INCREMENT PRIMARY KEY,
     name_competency VARCHAR(255) NOT NULL,
-    course_id INT NOT NULL,
+    course_id INT NOT NULL UNIQUE,
     code_competency VARCHAR(10) NOT NULL,
 
     created_by INT,
@@ -85,7 +85,7 @@ CREATE TABLE competency(
 
 CREATE TABLE document_types (
     id_documentType INT AUTO_INCREMENT PRIMARY KEY,
-    name_documentType VARCHAR(30),
+    name_documentType VARCHAR(30) NOT NULL,
 
     created_by INT,
     updated_by INT,
@@ -100,7 +100,7 @@ CREATE TABLE document_types (
 
 CREATE TABLE academic_documents(
     id_academicD INT AUTO_INCREMENT PRIMARY KEY,
-    name_academicD VARCHAR(150),
+    name_academicD VARCHAR(150) NOT NULL,
     competency_id INT NOT NULL,
     id_documentType INT NOT NULL,-- faz sentido para mim colocar uma tabela separada, e se o planner no futuro mudar de nome?
 
@@ -169,10 +169,14 @@ CREATE TABLE audit_logs(
     REFERENCES users(id_users)
 );
 
-CREATE INDEX idx_documents_competency ON academic_documents(competency_id); --
+CREATE INDEX idx_documents_competency ON academic_documents(competency_id);
+CREATE INDEX idx_documents_workflow ON academic_documents(workflow_status);
+CREATE INDEX idx_documents_active ON academic_documents(active);
+CREATE INDEX idx_competency_course ON competency(course_id);
+CREATE INDEX idx_courses_active ON courses(active);
 CREATE INDEX idx_users_email ON users(email_users);
 CREATE INDEX idx_users_microsoft ON users(microsoft_id);
-CREATE INDEX idx_competency_course ON competency(course_id);
+CREATE INDEX idx_users_active ON users(active);
 
 --  THE GREAT ROLLBACK
 
