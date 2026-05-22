@@ -68,7 +68,7 @@ CREATE TABLE user_courses(
 CREATE TABLE competency(
     id_competency INT AUTO_INCREMENT PRIMARY KEY,
     name_competency VARCHAR(255) NOT NULL,
-    course_id INT NOT NULL UNIQUE,
+    course_id INT NOT NULL,
     code_competency VARCHAR(10) NOT NULL,
 
     created_by INT,
