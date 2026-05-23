@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
+
 router.post('/login', async (req, res) => {
     try {
         const authHeader = req.headers['authorization'];
@@ -25,8 +26,14 @@ router.post('/login', async (req, res) => {
                 email: microsoftUser.mail || microsoftUser.userPrincipalName,
                 name: microsoftUser.displayName
             });
-            
+
             user = await User.findByMicrosoftId(req.db, microsoftUser.id);
+
+            if (!user.active) {
+                return res.status(403).json({
+                    message: 'Usuário desativado.'
+                });
+            }
         }
         const permissions = await User.findPermissionsByRoleId(req.db, user.roles_id);
 
@@ -34,14 +41,14 @@ router.post('/login', async (req, res) => {
             {
                 user_id: user.id_users,
                 role_id: user.roles_id,
-                email:   user.email_users,
+                email: user.email_users,
                 permissions: permissions
             },
             process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_EXPIRES }
         );
         return res.status(200).json({ token: jwtToken });
-        
+
     } catch (error) {
         console.error("Erro no processo de login:", error);
         return res.status(500).json({ message: "Erro interno no servidor." });

@@ -1,5 +1,4 @@
 const express = require('express');
-const connectDB = require('./src/config/db')
 const swaggerUi = require('swagger-ui-express')
 const swaggerSpec = require('./src/config/swagger')
 const PORT = 3000;
@@ -8,6 +7,8 @@ const app = express();
 
 const authRoutes = require('./src/routes/auth.routes')
 
+const cors = require('cors');
+app.use(cors());
 app.use(express.json());
 const injectDb = require('./src/middleware/db.middleware');
 app.use(injectDb);
@@ -30,4 +31,10 @@ app.listen(PORT, () =>{
     console.log(`servidor rodando na porta ${PORT}`);
 })
 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
 
+    return res.status(500).json({
+        error: 'Erro interno do servidor'
+    });
+});

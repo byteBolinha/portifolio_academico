@@ -66,7 +66,7 @@ router.patch('/:id/flag/coordenacao', Auth, requirePermissions('FLAG_AVALIADO_CO
 router.patch('/:id/flag/gestao', Auth, requirePermissions('FLAG_AVALIADO_GESTAO'), async (req, res) => {
     try {
         const { status } = req.body;
-        await AcademicDocuments.updateFlagIntegradoRM(req.db, req.params.id, status);
+        await AcademicDocuments.updateFlagValidadoGestao(req.db, req.params.id, status);
         res.status(200).json({ message: "Status de gestão (RM) atualizado." });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -76,7 +76,7 @@ router.patch('/:id/flag/gestao', Auth, requirePermissions('FLAG_AVALIADO_GESTAO'
 router.patch('/:id/flag/canvas', Auth, requirePermissions('FLAG_CANVAS_INTEGRATION'), async (req, res) => {
     try {
         const { status } = req.body;
-        await AcademicDocuments.updateFlagDisponivelCanva(req.db, req.params.id, status);
+        await AcademicDocuments.updateFlagIntegradoCanvas(req.db, req.params.id, status);
         res.status(200).json({ message: "Status Canva atualizado." });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -94,13 +94,53 @@ router.patch('/:id/drive-link', Auth, requirePermissions('MANAGE_LINKS_DRIVE'), 
     }
 });
 
-router.delete('/:id', Auth, requirePermissions('DELET_DOCUMENT'), async (req, res) => {
+router.put('/:id', Auth, requirePermissions('UPDATE_DOCUMENT'), async (req, res) => {
     try {
-        const success = await AcademicDocuments.deletById(req.db, req.params.id);
-        if (!success) return res.status(404).json({ message: "Documento não encontrado." });
-        res.status(200).json({ message: "Documento removido." });
+
+        await AcademicDocuments.update(
+            req.db,
+            req.params.id,
+            {
+                ...req.body,
+                updated_by: req.user.user_id
+            }
+        );
+
+        return res.status(200).json({
+            message: "Documento atualizado."
+        });
+
     } catch (err) {
-        res.status(500).json({ error: err.message });
+
+        return res.status(500).json({
+            error: err.message
+        });
+
+    }
+});
+
+router.patch('/:id/deactivate', Auth, requirePermissions('DEACTIVATE_DOCUMENT'), async (req, res) => {
+    try {
+
+        const success = await AcademicDocuments.deactivateById(
+            req.db,
+            req.params.id
+        );
+
+        if (!success) {
+            return res.status(404).json({
+                message: "Documento não encontrado."
+            });
+        }
+
+        return res.status(200).json({
+            message: "Documento desativado."
+        });
+
+    } catch (err) {
+        return res.status(500).json({
+            error: err.message
+        });
     }
 });
 

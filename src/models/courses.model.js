@@ -1,17 +1,17 @@
-class Courses{
-    constructor(name, created_at, course_icon){
+class Courses {
+    constructor(name, created_at, course_icon) {
         this.name = name;
         this.created_at = created_at;
         this.course_icon = course_icon;
     }
 
-    static async findAll(db){
+    static async findAll(db) {
         try {
             const [result] = await db.query(
-            'SELECT * FROM courses'
+                'SELECT * FROM courses'
             );
-            return result ? result:false;
-        
+            return result ? result : false;
+
         } catch (err) {
             console.log(err);
             return false;
@@ -21,7 +21,7 @@ class Courses{
     static async enrollUser(db, course_id, user_id) {
         try {
             const [result] = await db.query(
-                'INSERT INTO users_courses (id_courses, id_users) VALUES (?, ?)',
+                'INSERT INTO user_courses (course_id, user_id) VALUES (?, ?)',
                 [course_id, user_id]
             );
             return result;
@@ -40,19 +40,19 @@ class Courses{
                 [user_id]
             );
             return result;
-        }catch (err) {
+        } catch (err) {
             console.error(err);
             return false;
         };
     }
 
-    static async create(db, name, created_at, course_icon) {
+    static async create(db, name, launch_date, course_icon) {
         try {
             const [result] = await db.query(
                 'INSERT INTO courses (name_courses, launch_date_courses, course_icon_url) VALUES (?, ?, ?)',
                 [name, created_at, course_icon]
             );
-        
+
             return {
                 id_courses: result.insertId,
                 name,
@@ -64,6 +64,7 @@ class Courses{
             return false;
         };
     };
+    
     static async deactivate(db, id) {
         try {
             const [result] = await db.query(

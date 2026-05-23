@@ -1,126 +1,132 @@
 USE estudos_sistemas;
 
-/*
- Alimentar as tabelas com permissões primarias entregando ao backend o mínimo para trabalhar com o
- RBAC.
- */
 INSERT INTO permissions (name_permissions) VALUES
-('READ_ALL'),                
-('CRIAR_CURSO'),              
-('CRIAR_COMPETENCIA'),      
-('FLAG_PREENCHIDO'),         
-('FLAG_AVALIADO_COORD'),     
-('FLAG_AVALIADO_GESTAO'),    
-('FLAG_CANVAS_INTEGRATION'),  
-('MANAGE_LINKS_DRIVE'),      
-('MANAGE_PERMISSIONS');
+('CREATE_USER'),
+('READ_ALL'),
+('CRIAR_CURSO'),
+('UPDATE_CURSO'),
+('DEACTIVATE_COURSE'),
 
-SELECT * FROM permissions;
+('CRIAR_COMPETENCIA'),
+('UPDATE_COMPETENCIA'),
+('DEACTIVATE_COMPETENCIA'),
+
+('CRIAR_TIPO_DE_DOCUMENTO'),
+('UPDATE_TIPO_DOCUMENTO'),
+('DEACTIVATE_TIPO_DOCUMENTO'),
+
+('CRIAR_DOCUMENTO'),
+('UPDATE_DOCUMENT'),
+('DEACTIVATE_DOCUMENT'),
+
+('FLAG_PREENCHIDO'),
+('FLAG_VALIDADO_COORDENACAO'),
+('FLAG_VALIDADO_GESTAO'),
+('FLAG_MODELO_PRONTO'),
+('FLAG_INTEGRADO_CANVAS'),
+
+('MANAGE_LINKS_DRIVE'),
+
+('ASSIGN_USER_COURSE'),
+
+('MANAGE_PERMISSIONS'),
+('DEACTIVATE_USER');
 
 INSERT INTO roles (name_roles) VALUES
-('ADMIN'),        -- #1: Autoridade total e gestão de permissões 
-('NITE'),         -- #2: Autoridade para todas as etapas e criação
-('COORDINATOR'),  -- #3: Autoridade para preenchimento e coordenação
-('TEACHER');      -- #4: Autoridade apenas para preenchimento
+('ADMIN'),
+('NITE'),
+('COORDINATOR'),
+('TEACHER');
 
-SELECT * FROM roles;
+INSERT INTO roles_permissions (roles_id, permissions_id)
+SELECT 4, id_permissions
+FROM permissions
+WHERE name_permissions IN (
+    'READ_ALL',
+    'FLAG_PREENCHIDO'
+);
 
--- Permissões do TEACHER (#4)
-INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
-(4, 1), 
-(4, 4); 
+INSERT INTO roles_permissions (roles_id, permissions_id)
+SELECT 3, id_permissions
+FROM permissions
+WHERE name_permissions IN (
+    'READ_ALL',
+    'CRIAR_COMPETENCIA',
+    'UPDATE_COMPETENCIA',
+    'FLAG_PREENCHIDO',
+    'FLAG_VALIDADO_COORDENACAO'
+);
 
--- Permissões do COORDINATOR (#3)
-INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
-(3, 1),
-(3, 3), 
-(3, 4), 
-(3, 5); 
+INSERT INTO roles_permissions (roles_id, permissions_id)
+SELECT 2, id_permissions
+FROM permissions
+WHERE name_permissions IN (
+    'READ_ALL',
 
--- Permissões do NITE (#2)
-INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
-(2, 1), 
-(2, 2), 
-(2, 3), 
-(2, 4), 
-(2, 5), 
-(2, 6), 
-(2, 7), 
-(2, 8); 
+    'CRIAR_CURSO',
+    'UPDATE_CURSO',
 
--- Permissões do ADMIN (#1)
-INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
-(1, 1), 
-(1, 2), 
-(1, 3), 
-(1, 4), 
-(1, 5), 
-(1, 6), 
-(1, 7), 
-(1, 8), 
-(1, 9); 
+    'CRIAR_COMPETENCIA',
+    'UPDATE_COMPETENCIA',
 
-SELECT * FROM roles_permissions;
+    'CRIAR_TIPO_DE_DOCUMENTO',
+    'UPDATE_TIPO_DOCUMENTO',
 
--- Necessidades pontuais / Rafael.
+    'CRIAR_DOCUMENTO',
+    'UPDATE_DOCUMENT',
 
-INSERT INTO permissions (name_permissions) VALUES
-('CRIAR_TIPO_DE_DOCUMENTO');
-INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
-(2, 10);
+    'FLAG_PREENCHIDO',
+    'FLAG_VALIDADO_COORDENACAO',
+    'FLAG_VALIDADO_GESTAO',
+    'FLAG_MODELO_PRONTO',
+    'FLAG_INTEGRADO_CANVAS',
 
-INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
-(1, 10);
+    'MANAGE_LINKS_DRIVE',
 
-INSERT INTO permissions (name_permissions) VALUES('LIBERAR_CUSTOMIZACAO');
-INSERT INTO permissions (name_permissions) VALUES('DELET_DOCUMENT');
-INSERT INTO permissions (name_permissions) VALUES('CRIAR_DOCUMENTO');
+    'ASSIGN_USER_COURSE'
+);
 
-ALTER TABLE users ADD COLUMN active TINYINT(1) DEFAULT 1;
-SELECT * FROM users;
-SELECT * FROM roles_permissions;
+INSERT INTO roles_permissions (roles_id, permissions_id)
+SELECT 1, id_permissions
+FROM permissions;
 
-INSERT INTO permissions (name_permissions) VALUES ('ASSIGN_USER_COURSE');
-INSERT INTO permissions (name_permissions) VALUES ('DEACTIVE_USER');
+INSERT INTO document_types (
+    name_documentType
+) VALUES
+('planner'),
+('planner_educacional'),
+('mapa_avaliativo'),
+('plano_ensino');
 
-SELECT * FROM permissions;
+INSERT INTO courses (
+    name_courses,
+    launch_date_courses,
+    course_icon_url
+) VALUES
+(
+    'Análise e Desenvolvimento de Sistemas',
+    NOW(),
+    'https://example.com/icons/ads.png'
+),
+(
+    'Ciência da Computação',
+    NOW(),
+    'https://example.com/icons/cc.png'
+);
 
--- entupindo meu usuário de permissão para testar as rotas do banco de dados. (ADMIN)
-
-UPDATE users
-SET users.roles_id = 1
-WHERE id_users = 1;
-
-INSERT IGNORE INTO roles_permissions (roles_id, permissions_id)
+INSERT INTO audit_logs (
+    table_name,
+    record_id,
+    action_type,
+    new_data
+)
 VALUES
-(1,1),
-(1,2),
-(1,3),
-(1,4),
-(1,5),
-(1,6),
-(1,7),
-(1,8),
-(1,9),
-(1,10),
-(1,11),
-(1,12),
-(1,13),
-(1,14),
-(1,15),
-(1,16);
-
-ALTER TABLE courses ADD COLUMN active TINYINT(1) DEFAULT 1;
-
-SELECT * FROM permissions;
-
-INSERT INTO permissions (name_permissions) VALUES ('DELETAR_CURSO');
-
-DELETE FROM permissions WHERE name_permissions = 'DELETAR_CURSO';
-
-INSERT INTO permissions (name_permissions) VALUES ('DELETE_COURSE');
-
-INSERT IGNORE INTO roles_permissions (roles_id, permissions_id)
-VALUES (1, 18);
-
-INSERT INTO document_types (name_documentType) VALUES ('planner'), ('planner_educacional')
+(
+    'system',
+    0,
+    'CREATE',
+    JSON_OBJECT(
+        'message',
+        'Sistema inicializado com seed padrão'
+    )
+);

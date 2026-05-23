@@ -26,3 +26,5 @@ class DocumentType{
         return result;
     };
 };
+
+module.exports = DocumentType;

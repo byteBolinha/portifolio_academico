@@ -8,7 +8,7 @@ router.get('/', Auth, requirePermissions('READ_ALL'), async (req, res) => {
     try {
         const courses = await Courses.findAll(req.db);
         
-        if (!courses) {
+        if (courses.length === 0) {
             return res.status(500).json({ error: 'Erro ao listar os cursos.' });
         }
         return res.status(200).json(courses);
@@ -36,7 +36,7 @@ router.get('/user/:user_id', Auth, requirePermissions('READ_ALL'), async (req, r
 });
 
 router.post('/', Auth, requirePermissions('CRIAR_CURSO'), async (req, res) => {
-    const { name, created_at, course_icon } = req.body;
+    const { name, launch_date, course_icon } = req.body;
 
     if (!name || !created_at || !course_icon) {
         return res.status(400).json({ 
@@ -82,7 +82,7 @@ router.post('/:course_id/enroll', Auth, requirePermissions('ASSIGN_USER_COURSE')
     }
 });
 
-router.patch('/:id/deactivate', Auth, requirePermissions('DELETE_COURSE'), async (req, res) => {
+router.patch('/:id/deactivate', Auth, requirePermissions('DEACTIVATE_COURSE'), async (req, res) => {
     const { id } = req.params;
 
     try {

@@ -9,7 +9,7 @@ router.post('/', Auth, requirePermissions('CRIAR_TIPO_DE_DOCUMENTO'), async (req
     try {
         const { name_documentType } = req.body;
         if (!name_documentType) return res.status(400).json({ message: "Nome é obrigatório." });
-        const result = await DocumentTypes.create(req.db, name_documentType);
+        const result = await DocumentTypes.create(req.db, {name: name_documentType});
         res.status(201).json({ id: result.insertId, message: "Tipo de documento criado." });
     } catch (err) {
         res.status(500).json({ error: err.message });

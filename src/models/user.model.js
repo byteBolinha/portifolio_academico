@@ -82,7 +82,7 @@ class User{
  static async enrollInCourse(db, user_id, course_id) {
         try {
             const [result] = await db.query(
-                'INSERT INTO users_courses (id_users, id_courses) VALUES (?, ?)',
+                'INSERT INTO user_courses (user_id, course_id) VALUES (?, ?)',
                 [user_id, course_id]
             );
             return result;
