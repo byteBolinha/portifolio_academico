@@ -88,6 +88,36 @@ CREATE TABLE academic_documents(
     CONSTRAINT fk_document_type FOREIGN KEY (id_documentType) REFERENCES document_types(id_documentType) ON DELETE CASCADE
 );
 
+CREATE TABLE notifications (
+    id_notification INT AUTO_INCREMENT PRIMARY KEY,
+
+    user_id INT NULL,
+    competency_id INT NOT NULL,
+    document_id INT NOT NULL,
+
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+
+    is_read BOOLEAN DEFAULT FALSE,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_notification_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id_users)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_notification_competency
+        FOREIGN KEY (competency_id)
+        REFERENCES competency(id_competency)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_notification_document
+        FOREIGN KEY (document_id)
+        REFERENCES academic_documents(id_academicD)
+        ON DELETE CASCADE
+);
+
 # THE GREAT ROLLBACK
 
 /*

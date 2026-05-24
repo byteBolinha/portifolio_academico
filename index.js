@@ -24,6 +24,7 @@ const documentTypeRoutes = require('./src/routes/documentTypes.routes');
 const academicDocumentsRoutes = require('./src/routes/academicDocuments.routes');
 const coursesRoutes = require("./src/routes/course.routes");
 const searchRoutes = require("./src/routes/search.routes");
+const notificationRoutes = require("./src/routes/notification.routes");
 
 
 app.use('/competency', competencyRoutes);
@@ -31,11 +32,12 @@ app.use('/document-types', documentTypeRoutes);
 app.use('/academic-documents', academicDocumentsRoutes);
 app.use("/courses", coursesRoutes);
 app.use("/search", searchRoutes);
+app.use("/notifications", notificationRoutes);
 
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.listen(PORT, () =>{
     console.log(`servidor rodando na porta ${PORT}`);
-})
+});
 
 

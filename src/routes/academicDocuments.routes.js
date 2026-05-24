@@ -4,6 +4,7 @@ const Auth = require('../middleware/jwt.middleware');
 const AcademicDocuments = require('../models/academicDocuments.model');
 const requirePermissions = require('../middleware/requirePermission.middleware');
 const Competency = require('../models/competency.model');
+const Notification = require('../models/notification.model');
 
 router.post("/", async (req, res) => {
   try {
@@ -117,15 +118,53 @@ router.patch('/:id/flag/coordenacao', Auth, requirePermissions('FLAG_AVALIADO_CO
     }
 });
 
-router.patch('/:id/flag/gestao', Auth, requirePermissions('FLAG_AVALIADO_GESTAO'), async (req, res) => {
+router.patch(
+  '/:id/flag/gestao',
+  Auth,
+  requirePermissions('FLAG_AVALIADO_GESTAO'),
+  async (req, res) => {
     try {
-        const { status } = req.body;
-        await AcademicDocuments.updateFlagIntegradoRM(req.db, req.params.id, status);
-        res.status(200).json({ message: "Status de gestão (RM) atualizado." });
+
+      const { status } = req.body;
+
+     
+      await AcademicDocuments.updateFlagIntegradoRM(
+        req.db,
+        req.params.id,
+        status
+      );
+
+   
+      const document = await AcademicDocuments.findById(
+        req.db,
+        req.params.id
+      );
+
+      console.log(document);
+
+  
+      await Notification.create(req.db, {
+        competency_id: document.competency_id,
+        document_id: document.id_academicD,
+        title: "Integração RM concluída",
+        message: `${document.name_academicD} foi integrado ao RM.`,
+      });
+
+      res.status(200).json({
+        message: "Status de gestão (RM) atualizado."
+      });
+
     } catch (err) {
-        res.status(500).json({ error: err.message });
+
+      console.error(err);
+
+      res.status(500).json({
+        error: err.message
+      });
+
     }
-});
+  }
+);
 
 router.patch('/:id/flag/canvas', Auth, requirePermissions('FLAG_CANVAS_INTEGRATION'), async (req, res) => {
     try {
