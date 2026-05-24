@@ -126,6 +126,30 @@ class AcademicDocuments {
     );
     return result.affectedRows > 0;
   }
+
+  static async updateByCompetencyAndType(
+  db,
+  competency_id,
+  documentType_id,
+  data
+) {
+  return await db.query(
+    `
+    UPDATE academic_documents
+    SET
+      drive_link = ?,
+      trimestre = ?
+    WHERE competency_id = ?
+    AND id_documentType = ?
+    `,
+    [
+      data.drive_link,
+      data.trimestre,
+      competency_id,
+      documentType_id,
+    ]
+  );
+}
 }
 
 module.exports = AcademicDocuments;

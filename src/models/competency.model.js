@@ -73,12 +73,48 @@ class Competency {
   }
 
   static async findById(db, id) {
-    const [result] = await db.query(
-      `SELECT id_competency, name_competency,code_competency FROM competency WHERE course_id = ?`,
-      [id],
-    );
-    return result;
-  }
+  const [result] = await db.query(
+    `
+    SELECT 
+      c.id_competency,
+      c.name_competency,
+      c.code_competency,
+      c.matriz_competency,
+
+      MAX(
+        CASE
+          WHEN ad.id_documentType = 1
+          THEN ad.drive_link
+        END
+      ) AS planner_link,
+
+      MAX(
+        CASE
+          WHEN ad.id_documentType = 2
+          THEN ad.drive_link
+        END
+      ) AS teaching_plan_link,
+
+      MAX(ad.trimestre) AS trimestre
+
+    FROM competency c
+
+    LEFT JOIN academic_documents ad
+      ON ad.competency_id = c.id_competency
+
+    WHERE c.id_competency = ?
+
+    GROUP BY
+      c.id_competency,
+      c.name_competency,
+      c.code_competency,
+      c.matriz_competency
+    `,
+    [id],
+  );
+
+  return result[0];
+}
 }
 
 module.exports = Competency;
