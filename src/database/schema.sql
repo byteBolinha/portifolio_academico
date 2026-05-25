@@ -78,6 +78,8 @@ CREATE TABLE academic_documents(
     flag_validacao_coordenacao BOOLEAN DEFAULT FALSE,
     flag_integrado_rm BOOLEAN DEFAULT FALSE,
     flag_disponivel_canva BOOLEAN DEFAULT FALSE,
+    flag_necessita_revisao BOOLEAN DEFAULT FALSE,
+    flag_em_preenchimento BOOLEAN DEFAULT FALSE,
 
     drive_link VARCHAR(500), -- Link do arquivo no Google Drive/OneDrive
 

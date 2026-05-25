@@ -33,9 +33,9 @@ SELECT * FROM roles;
 
 -- Permissões do TEACHER (#4)
 INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
-(1, 1), -- READ_ALL
-(1, 4), -- EM_PREENCHIMENTO
-(1, 5), -- FLAG_PREENCHIDO
+(4, 1), -- READ_ALL
+(4, 4), -- EM_PREENCHIMENTO
+(4, 5); -- FLAG_PREENCHIDO
 
 -- Permissões do COORDINATOR (#3)
 INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
@@ -43,7 +43,7 @@ INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
 (3, 4), -- EM_PREENCHIMENTO
 (3, 5), -- FLAG_PREENCHIDO
 (3, 6), -- FLAG_AVALIADO_COORD
-(3, 7),  -- NECESSITA_REVISAO
+(3, 7);  -- NECESSITA_REVISAO
 
 
 -- Permissões do NITE (#2)
@@ -58,7 +58,7 @@ INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
 (2, 8),  -- FLAG_AVALIADO_GESTAO
 (2, 9),  -- LIBERAR_CUSTOMIZACAO
 (2, 10), -- FLAG_CANVAS_INTEGRATION
-(2, 11), -- RM_INTEGRATE
+(2, 11); -- RM_INTEGRATE
 
 -- Permissões do ADMIN (#1)
 INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
@@ -77,6 +77,11 @@ INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
 (1, 13);  -- MANAGE_PERMISSIONS
 
 SELECT * FROM roles_permissions;
+
+INSERT INTO document_types (name_documentType)
+VALUES
+('Planner'),
+('Plano de Ensino');
 
 -- Necessidades pontuais / Rafael.
 
