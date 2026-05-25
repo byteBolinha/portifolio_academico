@@ -9,8 +9,6 @@ const Notification = require('../models/notification.model');
 router.post("/", async (req, res) => {
   try {
 
-    console.log(req.body);
-
     const {
       name_competency,
       course_id,
@@ -21,7 +19,6 @@ router.post("/", async (req, res) => {
       matriz_competency,
     } = req.body;
 
-    console.log(matriz_competency);
 
     const competencyResult = await Competency.create(req.db, {
       name: name_competency,
@@ -88,15 +85,43 @@ router.get('/:id', Auth, requirePermissions('READ_ALL'), async (req, res) => {
     }
 });
 
-router.patch('/:id/flag/customizar', Auth, requirePermissions('LIBERAR_CUSTOMIZACAO'), async (req, res) => {
+router.patch(
+  '/:id/flag/customizar',
+  Auth,
+  requirePermissions('LIBERAR_CUSTOMIZACAO'),
+  async (req, res) => {
     try {
-        const { status } = req.body;
-        await AcademicDocuments.updateFlagLiberadoCustomizar(req.db, req.params.id, status);
-        res.status(200).json({ message: "Status de customização atualizado." });
+      const { status } = req.body;
+
+      await AcademicDocuments.updateFlagLiberadoCustomizar(
+        req.db,
+        req.params.id,
+        status
+      );
+
+      const document = await AcademicDocuments.findById(
+        req.db,
+        req.params.id
+      );
+
+      await Notification.create(req.db, {
+        competency_id: document.competency_id,
+        document_id: document.id_academicD,
+        title: "Customização liberada",
+        message: `${document.name_academicD} foi liberado para customização.`,
+      });
+
+      res.status(200).json({
+        message: "Status de customização atualizado."
+      });
+
     } catch (err) {
-        res.status(500).json({ error: err.message });
+      res.status(500).json({
+        error: err.message
+      });
     }
-});
+  }
+);
 
 router.patch('/:id/flag/preenchido', Auth, requirePermissions('FLAG_PREENCHIDO'), async (req, res) => {
     try {
@@ -166,15 +191,46 @@ router.patch(
   }
 );
 
-router.patch('/:id/flag/canvas', Auth, requirePermissions('FLAG_CANVAS_INTEGRATION'), async (req, res) => {
+router.patch(
+  '/:id/flag/coordenacao',
+  Auth,
+  requirePermissions('FLAG_AVALIADO_COORD'),
+  async (req, res) => {
     try {
-        const { status } = req.body;
-        await AcademicDocuments.updateFlagDisponivelCanva(req.db, req.params.id, status);
-        res.status(200).json({ message: "Status Canva atualizado." });
+
+      const { status } = req.body;
+
+      await AcademicDocuments.updateFlagValidacaoCoordenacao(
+        req.db,
+        req.params.id,
+        status
+      );
+
+      const document = await AcademicDocuments.findById(
+        req.db,
+        req.params.id
+      );
+
+      await Notification.create(req.db, {
+        competency_id: document.competency_id,
+        document_id: document.id_academicD,
+        title: "Documento validado pela coordenação",
+        message: `${document.name_academicD} foi validado pela coordenação.`,
+      });
+
+      res.status(200).json({
+        message: "Validação da coordenação atualizada."
+      });
+
     } catch (err) {
-        res.status(500).json({ error: err.message });
+
+      res.status(500).json({
+        error: err.message
+      });
+
     }
-});
+  }
+);
 
 router.patch('/:id/trimestre', async (req, res) => {
     try {
@@ -303,6 +359,18 @@ router.patch(
         req.params.id,
         status
       );
+
+      const document = await AcademicDocuments.findById(
+        req.db,
+        req.params.id
+      );
+
+      await Notification.create(req.db, {
+        competency_id: document.competency_id,
+        document_id: document.id_academicD,
+        title: "Documento em preenchimento",
+        message: `${document.name_academicD} entrou em preenchimento.`,
+      });
 
       res.status(200).json({
         message: "Status em preenchimento atualizado."
