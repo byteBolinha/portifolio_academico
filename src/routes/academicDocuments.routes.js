@@ -123,25 +123,87 @@ router.patch(
   }
 );
 
-router.patch('/:id/flag/preenchido', Auth, requirePermissions('FLAG_PREENCHIDO'), async (req, res) => {
+router.patch(
+  '/:id/flag/preenchido',
+  Auth,
+  requirePermissions('FLAG_PREENCHIDO'),
+  async (req, res) => {
     try {
-        const { status } = req.body;
-        await AcademicDocuments.updateFlagPreenchido(req.db, req.params.id, status);
-        res.status(200).json({ message: "Status de preenchimento atualizado." });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
 
-router.patch('/:id/flag/coordenacao', Auth, requirePermissions('FLAG_AVALIADO_COORD'), async (req, res) => {
-    try {
-        const { status } = req.body;
-        await AcademicDocuments.updateFlagValidacaoCoordenacao(req.db, req.params.id, status);
-        res.status(200).json({ message: "Validação da coordenação atualizada." });
+      const { status } = req.body;
+
+      await AcademicDocuments.updateFlagPreenchido(
+        req.db,
+        req.params.id,
+        status
+      );
+
+      const document = await AcademicDocuments.findById(
+        req.db,
+        req.params.id
+      );
+
+      await Notification.create(req.db, {
+        competency_id: document.competency_id,
+        document_id: document.id_academicD,
+        title: "Documento preenchido",
+        message: `${document.name_academicD} foi marcado como preenchido.`,
+      });
+
+      res.status(200).json({
+        message: "Status de preenchimento atualizado."
+      });
+
     } catch (err) {
-        res.status(500).json({ error: err.message });
+
+      res.status(500).json({
+        error: err.message
+      });
+
     }
-});
+  }
+);
+
+router.patch(
+  '/:id/flag/coordenacao',
+  Auth,
+  requirePermissions('FLAG_AVALIADO_COORD'),
+  async (req, res) => {
+    try {
+
+      const { status } = req.body;
+
+      await AcademicDocuments.updateFlagValidacaoCoordenacao(
+        req.db,
+        req.params.id,
+        status
+      );
+
+      const document = await AcademicDocuments.findById(
+        req.db,
+        req.params.id
+      );
+
+      await Notification.create(req.db, {
+        competency_id: document.competency_id,
+        document_id: document.id_academicD,
+        title: "Documento validado pela coordenação",
+        message: `${document.name_academicD} foi validado pela coordenação.`,
+      });
+
+      res.status(200).json({
+        message: "Validação da coordenação atualizada."
+      });
+
+    } catch (err) {
+
+      res.status(500).json({
+        error: err.message
+      });
+
+    }
+  }
+);
 
 router.patch(
   '/:id/flag/gestao',
@@ -374,6 +436,47 @@ router.patch(
 
       res.status(200).json({
         message: "Status em preenchimento atualizado."
+      });
+
+    } catch (err) {
+
+      res.status(500).json({
+        error: err.message
+      });
+
+    }
+  }
+);
+
+router.patch(
+  '/:id/flag/canvas',
+  Auth,
+  requirePermissions('FLAG_CANVAS_INTEGRATION'),
+  async (req, res) => {
+    try {
+
+      const { status } = req.body;
+
+      await AcademicDocuments.updateFlagDisponivelCanva(
+        req.db,
+        req.params.id,
+        status
+      );
+
+      const document = await AcademicDocuments.findById(
+        req.db,
+        req.params.id
+      );
+
+      await Notification.create(req.db, {
+        competency_id: document.competency_id,
+        document_id: document.id_academicD,
+        title: "Documento disponível no Canvas",
+        message: `${document.name_academicD} foi disponibilizado no Canvas.`,
+      });
+
+      res.status(200).json({
+        message: "Status Canva atualizado."
       });
 
     } catch (err) {
