@@ -1,4 +1,4 @@
-INSERT INTO courses (name_courses, matriz_courses, course_icon_url)
+INSERT INTO courses (name_courses, matrix_courses, course_icon_url)
 VALUES
 ('Administração', '62', 'http://localhost:3000/uploads/administracao.png'),
 ('Análise e Desenvolvimento de Sistemas', '63', 'http://localhost:3000/uploads/ads.png'),

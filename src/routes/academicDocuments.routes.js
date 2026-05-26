@@ -253,47 +253,6 @@ router.patch(
   }
 );
 
-router.patch(
-  '/:id/flag/coordenacao',
-  Auth,
-  requirePermissions('FLAG_AVALIADO_COORD'),
-  async (req, res) => {
-    try {
-
-      const { status } = req.body;
-
-      await AcademicDocuments.updateFlagValidacaoCoordenacao(
-        req.db,
-        req.params.id,
-        status
-      );
-
-      const document = await AcademicDocuments.findById(
-        req.db,
-        req.params.id
-      );
-
-      await Notification.create(req.db, {
-        competency_id: document.competency_id,
-        document_id: document.id_academicD,
-        title: "Documento validado pela coordenação",
-        message: `${document.name_academicD} foi validado pela coordenação.`,
-      });
-
-      res.status(200).json({
-        message: "Validação da coordenação atualizada."
-      });
-
-    } catch (err) {
-
-      res.status(500).json({
-        error: err.message
-      });
-
-    }
-  }
-);
-
 router.patch('/:id/trimestre', async (req, res) => {
     try {
 

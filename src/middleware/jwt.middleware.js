@@ -7,7 +7,7 @@ const Auth = (req, res, next) => {
     const users = {
       ADMIN: {
         id: 1,
-        roles_id: 1,
+        role_id: 1,
         role: "ADMIN",
         permissions: [
           "CRIAR_CURSO",
@@ -30,8 +30,8 @@ const Auth = (req, res, next) => {
       },
 
       PROFESSOR: {
-        id: 2,
-        roles_id: 2,
+        id: 4,
+        role_id: 4,
         role: "PROFESSOR",
         permissions: [
           "READ_ALL",
@@ -42,7 +42,7 @@ const Auth = (req, res, next) => {
 
       COORDINATOR: {
         id: 3,
-        roles_id: 3,
+        role_id: 3,
         role: "COORDINATOR",
         permissions: [
           "READ_ALL",
@@ -56,8 +56,8 @@ const Auth = (req, res, next) => {
       },
 
       NITE: {
-        id: 4,
-        roles_id: 4,
+        id: 2,
+        role_id: 2,
         role: "NITE",
         permissions: [
           "CRIAR_CURSO",

@@ -3,6 +3,9 @@ const requirePermissions = (permissionName) => {
 
         try {
 
+            console.log("REQ.USER:", req.user);
+console.log("ROLE ID:", req.user.role_id);
+
             const [result] = await req.db.query(
                 `SELECT p.name_permissions 
                  FROM roles_permissions rp
