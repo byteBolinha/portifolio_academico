@@ -12,14 +12,19 @@ class User{
 
     //padrão, criamos aqui:
     static async create(db, user) {
-        const [result] = await db.query(
-            `INSERT INTO users (microsoft_id, email_users, name_users, roles_id)
-            VALUES (?, ?, ?, ?)`,
-            [user.microsoft_id, user.email, user.name, user.role_id]
-        );
+    const [result] = await db.query(
+        `INSERT INTO users (microsoft_id, email_users, name_users, roles_id)
+        VALUES (?, ?, ?, ?)`,
+        [
+            user.microsoft_id,
+            user.email_users,
+            user.name_users,
+            4
+        ]
+    );
 
-        return result.insertId;
-    }
+    return result.insertId;
+}
 
     //valida se o usuário da microsoft já foi criado na nossa relação:
     static async findByMicrosoftId(db, microsoft_id,){
