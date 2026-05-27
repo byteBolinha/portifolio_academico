@@ -35,6 +35,7 @@ class Notification {
       n.created_at,
 
       c.name_competency,
+      c.code_competency,
 
       courses.name_courses
 
