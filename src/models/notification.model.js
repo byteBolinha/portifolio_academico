@@ -54,6 +54,40 @@ class Notification {
   return result;
 }
 
+static async findByCourse(db, courseId) {
+  const [result] = await db.query(
+    `
+    SELECT
+      n.id_notification,
+      n.title,
+      n.message,
+      n.is_read,
+      n.created_at,
+
+      c.name_competency,
+      c.code_competency,
+      c.course_id,
+
+      courses.name_courses
+
+    FROM notifications n
+
+    LEFT JOIN competency c
+      ON c.id_competency = n.competency_id
+
+    LEFT JOIN courses
+      ON courses.id_courses = c.course_id
+
+    WHERE c.course_id = ?
+
+    ORDER BY n.created_at DESC
+    `,
+    [courseId]
+  );
+
+  return result;
+}
+
  
 
   static async markAsRead(db, id) {
@@ -67,5 +101,7 @@ class Notification {
     );
   }
 }
+
+
 
 module.exports = Notification;

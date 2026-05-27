@@ -21,6 +21,22 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/course/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const notifications = await Notification.findByCourse(
+      req.db,
+      id
+    );
+
+    res.status(200).json(notifications);
+  } catch (err) {
+    res.status(500).json({
+      error: err.message,
+    });
+  }
+});
 
 
 module.exports = router;
