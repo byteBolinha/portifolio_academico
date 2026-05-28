@@ -100,7 +100,21 @@ static async findByCourse(db, courseId) {
       [id]
     );
   }
+
+  static async delete(db, id) {
+  const [result] = await db.query(
+    `
+    DELETE FROM notifications
+    WHERE id_notification = ?
+    `,
+    [id]
+  );
+
+  return result;
 }
+}
+
+
 
 
 
