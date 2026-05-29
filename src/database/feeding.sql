@@ -19,6 +19,7 @@ INSERT INTO permissions (name_permissions) VALUES
 ('RM_INTEGRATE'),
 
 ('MANAGE_LINKS_DRIVE'),
+('DELETE_DOCUMENT'),
 ('MANAGE_PERMISSIONS');
 
 SELECT * FROM permissions;
@@ -74,7 +75,8 @@ INSERT INTO roles_permissions (roles_id, permissions_id) VALUES
 (1, 10),  -- FLAG_CANVAS_INTEGRATION
 (1, 11),  -- RM_INTEGRATE
 (1, 12),  -- MANAGE_LINKS_DRIVE
-(1, 13);  -- MANAGE_PERMISSIONS
+(1, 13);  -- DELETE
+(1, 14);  -- MANAGE_PERMISSIONS
 
 SELECT * FROM roles_permissions;
 

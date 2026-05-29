@@ -150,6 +150,16 @@ class AcademicDocuments {
     ]
   );
 }
+
+static async deleteByCompetency(db, competencyId) {
+  const [result] = await db.query(
+    `DELETE FROM academic_documents
+     WHERE competency_id = ?`,
+    [competencyId]
+  );
+
+  return result;
+}
 }
 
 module.exports = AcademicDocuments;

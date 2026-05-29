@@ -115,6 +115,18 @@ class Competency {
 
   return result[0];
 }
+
+static async delete(db, id) {
+  const [result] = await db.query(
+    `DELETE FROM competency
+     WHERE id_competency = ?`,
+    [id]
+  );
+
+  return result;
+}
+
+
 }
 
 module.exports = Competency;

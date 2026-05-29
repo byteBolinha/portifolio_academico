@@ -281,15 +281,7 @@ router.patch('/:id/drive-link', Auth, requirePermissions('MANAGE_LINKS_DRIVE'), 
     }
 });
 
-router.delete('/:id', Auth, requirePermissions('DELET_DOCUMENT'), async (req, res) => {
-    try {
-        const success = await AcademicDocuments.deletById(req.db, req.params.id);
-        if (!success) return res.status(404).json({ message: "Documento não encontrado." });
-        res.status(200).json({ message: "Documento removido." });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+
 
 router.patch("/:id", async (req, res) => {
   try {
@@ -447,5 +439,41 @@ router.patch(
     }
   }
 );
+
+router.delete(
+  "/competency/:id",
+  Auth,
+  requirePermissions("DELET_DOCUMENT"),
+  async (req, res) => {
+    try {
+
+      const result = await Competency.delete(
+        req.db,
+        req.params.id
+      );
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({
+          message: "Competência não encontrada."
+        });
+      }
+
+      return res.status(200).json({
+        message: "Competência removida."
+      });
+
+    } catch (err) {
+
+      console.error(err);
+
+      return res.status(500).json({
+        error: err.message
+      });
+
+    }
+  }
+);
+
+
 
 module.exports = router;
