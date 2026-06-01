@@ -17,16 +17,15 @@ class Notification {
         notification.document_id,
         notification.title,
         notification.message,
-      ]
+      ],
     );
 
     return result;
   }
 
   static async findAll(db) {
-
-  const [result] = await db.query(
-    `
+    const [result] = await db.query(
+      `
     SELECT
       n.id_notification,
       n.title,
@@ -48,15 +47,15 @@ class Notification {
       ON courses.id_courses = c.course_id
 
     ORDER BY n.created_at DESC
-    `
-  );
+    `,
+    );
 
-  return result;
-}
+    return result;
+  }
 
-static async findByCourse(db, courseId) {
-  const [result] = await db.query(
-    `
+  static async findByCourse(db, courseId) {
+    const [result] = await db.query(
+      `
     SELECT
       n.id_notification,
       n.title,
@@ -82,13 +81,11 @@ static async findByCourse(db, courseId) {
 
     ORDER BY n.created_at DESC
     `,
-    [courseId]
-  );
+      [courseId],
+    );
 
-  return result;
-}
-
- 
+    return result;
+  }
 
   static async markAsRead(db, id) {
     return await db.query(
@@ -97,25 +94,21 @@ static async findByCourse(db, courseId) {
       SET is_read = true
       WHERE id_notification = ?
       `,
-      [id]
+      [id],
     );
   }
 
   static async delete(db, id) {
-  const [result] = await db.query(
-    `
+    const [result] = await db.query(
+      `
     DELETE FROM notifications
     WHERE id_notification = ?
     `,
-    [id]
-  );
+      [id],
+    );
 
-  return result;
+    return result;
+  }
 }
-}
-
-
-
-
 
 module.exports = Notification;
