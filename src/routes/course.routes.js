@@ -65,4 +65,68 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
+router.put("/:id", upload.single("image"), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name_courses, matrix_courses } = req.body;
+
+    const existingCourse = await Course.findById(req.db, id);
+
+    if (!existingCourse) {
+      return res.status(404).json({
+        message: "Curso não encontrado",
+      });
+    }
+
+    const course_icon_url = req.file
+      ? `http://localhost:3000/uploads/${req.file.filename}`
+      : existingCourse.course_icon_url;
+
+    await Course.update(req.db, id, {
+      name_courses,
+      matrix_courses,
+      course_icon_url,
+    });
+
+    res.status(200).json({
+      id_courses: id,
+      name_courses,
+      matrix_courses,
+      course_icon_url,
+    });
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      message: "Erro ao atualizar curso",
+    });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const existingCourse = await Course.findById(req.db, id);
+
+    if (!existingCourse) {
+      return res.status(404).json({
+        message: "Curso não encontrado",
+      });
+    }
+
+    await Course.delete(req.db, id);
+
+    res.status(200).json({
+      message: "Curso excluído com sucesso",
+    });
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      message: "Erro ao excluir curso",
+    });
+  }
+});
+
 module.exports = router;

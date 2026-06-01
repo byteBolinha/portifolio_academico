@@ -25,6 +25,15 @@ class Course {
     return result;
   }
 
+  static async delete(db, id) {
+    const [result] = await db.query(
+      `DELETE FROM courses WHERE id_courses = ?`,
+      [id],
+    );
+
+    return result;
+  }
+
   static async findAll(db) {
     const [result] = await db.query(
       `
@@ -37,6 +46,22 @@ class Course {
       FROM courses
       ORDER BY name_courses ASC
       `,
+    );
+
+    return result;
+  }
+
+  static async update(db, id, course) {
+    const [result] = await db.query(
+      `
+    UPDATE courses
+    SET
+      name_courses = ?,
+      matrix_courses = ?,
+      course_icon_url = ?
+    WHERE id_courses = ?
+    `,
+      [course.name_courses, course.matrix_courses, course.course_icon_url, id],
     );
 
     return result;
