@@ -2,6 +2,7 @@ INSERT INTO courses (name_courses, matrix_courses, course_icon_url)
 VALUES
 ('Administração', '62', 'http://localhost:3000/uploads/administracao.png'),
 ('Análise e Desenvolvimento de Sistemas', '63', 'http://localhost:3000/uploads/ads.png'),
+('Biomedicina', '62', 'http://localhost:3000/uploads/biomedicina.png'),
 ('Arquitetura e Urbanismo', '62', 'http://localhost:3000/uploads/arquitetura.png'),
 ('Design Gráfico Digital', '62', 'http://localhost:3000/uploads/design.png'),
 ('Direito', '62', 'http://localhost:3000/uploads/direito.png'),
