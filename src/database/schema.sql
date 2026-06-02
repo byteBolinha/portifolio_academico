@@ -22,7 +22,7 @@ CREATE TABLE roles_permissions(
 CREATE TABLE courses(
     id_courses INT AUTO_INCREMENT PRIMARY KEY,
     name_courses VARCHAR(255),
-    launch_date_courses TIMESTAMP,
+    matrix_courses VARCHAR(50),
     created_at_courses TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     course_icon_url VARCHAR(300)
 
@@ -55,6 +55,7 @@ CREATE TABLE competency(
     name_competency VARCHAR(255) NOT NULL,
     course_id INT NOT NULL,
     code_competency VARCHAR(10) NOT NULL,
+    matriz_competency VARCHAR(50) NOT NULL, 
 
     CONSTRAINT fk_competency_course FOREIGN KEY (course_id) REFERENCES courses(id_courses) ON DELETE CASCADE
 );
@@ -77,6 +78,8 @@ CREATE TABLE academic_documents(
     flag_validacao_coordenacao BOOLEAN DEFAULT FALSE,
     flag_integrado_rm BOOLEAN DEFAULT FALSE,
     flag_disponivel_canva BOOLEAN DEFAULT FALSE,
+    flag_necessita_revisao BOOLEAN DEFAULT FALSE,
+    flag_em_preenchimento BOOLEAN DEFAULT FALSE,
 
     drive_link VARCHAR(500), -- Link do arquivo no Google Drive/OneDrive
 
@@ -85,6 +88,36 @@ CREATE TABLE academic_documents(
 
     CONSTRAINT fk_document_competency FOREIGN KEY (competency_id) REFERENCES competency(id_competency) ON DELETE CASCADE,
     CONSTRAINT fk_document_type FOREIGN KEY (id_documentType) REFERENCES document_types(id_documentType) ON DELETE CASCADE
+);
+
+CREATE TABLE notifications (
+    id_notification INT AUTO_INCREMENT PRIMARY KEY,
+
+    user_id INT NULL,
+    competency_id INT NOT NULL,
+    document_id INT NOT NULL,
+
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+
+    is_read BOOLEAN DEFAULT FALSE,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_notification_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id_users)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_notification_competency
+        FOREIGN KEY (competency_id)
+        REFERENCES competency(id_competency)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_notification_document
+        FOREIGN KEY (document_id)
+        REFERENCES academic_documents(id_academicD)
+        ON DELETE CASCADE
 );
 
 # THE GREAT ROLLBACK
