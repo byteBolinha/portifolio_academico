@@ -35,6 +35,7 @@ class Notification {
 
       c.name_competency,
       c.code_competency,
+      c.id_competency,
 
       courses.name_courses
 
@@ -66,6 +67,7 @@ class Notification {
       c.name_competency,
       c.code_competency,
       c.course_id,
+      c.id_competency,
 
       courses.name_courses
 
