@@ -71,7 +71,7 @@ CREATE TABLE academic_documents(
     id_documentType INT NOT NULL,-- faz sentido para mim colocar uma tabela separada, e se o planner no futuro mudar de nome?
 
     matriz VARCHAR(20),      -- Ex: 'Matriz - 62'
-    trimestre ENUM('1ª Trimestre', '2ª Trimestre', '3ª Trimestre', '4ª Trimestre'),
+    trimestre ENUM('1ª Trimestre', '2ª Trimestre', '3ª Trimestre', '4ª Trimestre','1º Semestre', '2º Semestre'),
 
     flag_liberado_customizar BOOLEAN DEFAULT FALSE,
     flag_preenchido BOOLEAN DEFAULT FALSE,
