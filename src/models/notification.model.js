@@ -24,20 +24,28 @@ class Notification {
   }
 
   static async findAll(db) {
-    const [result] = await db.query(
-      `
-    SELECT
-      n.id_notification,
-      n.title,
-      n.message,
-      n.is_read,
-      n.created_at,
+    const [result] = await db.query(`
+      SELECT
+        n.id_notification,
+        n.title,
+        n.message,
+        n.is_read,
+        n.created_at,
 
-      c.name_competency,
-      c.code_competency,
-      c.id_competency,
+        c.name_competency,
+        c.code_competency,
+        c.id_competency,
+        c.course_id,
 
-      courses.name_courses
+        courses.name_courses,
+
+        a.flag_em_preenchimento,
+        a.flag_preenchido,
+        a.flag_necessita_revisao,
+        a.flag_validacao_coordenacao,
+        a.flag_liberado_customizar,
+        a.flag_disponivel_canva,
+        a.flag_integrado_rm
 
     FROM notifications n
 
@@ -47,12 +55,14 @@ class Notification {
     LEFT JOIN courses
       ON courses.id_courses = c.course_id
 
-    ORDER BY n.created_at DESC
-    `,
-    );
+    LEFT JOIN academic_documents a
+      ON a.id_academicD = n.document_id
 
-    return result;
-  }
+    ORDER BY n.created_at DESC
+  `);
+
+  return result;
+}
 
   static async findByCourse(db, courseId) {
     const [result] = await db.query(
