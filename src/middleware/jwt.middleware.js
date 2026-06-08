@@ -1,20 +1,116 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
-const verifyToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; //baerer token
+const Auth = (req, res, next) => {
+  if (process.env.SKIP_AUTH === "true") {
+    const role = (process.env.MOCK_ROLE || "ADMIN").toUpperCase();
 
-    if(!token){
-        return res.status(401).json({message: 'Token não foi fornecido'});
-    }
+    const users = {
+      ADMIN: {
+        id: 1,
+        role_id: 1,
+        role: "ADMIN",
+        permissions: [
+          "CRIAR_CURSO",
+          "CRIAR_COMPETENCIA",
+          "READ_ALL",
 
-    try{
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded; // as rotas passam (acessam) o req.user
-        next();
-    }catch(err){
-        //forbidden (proibido)
-        return res.status(403).json({message:'token invalido ou expirado!'})
-    }
-}
-module.exports = verifyToken;
+          "FLAG_PREENCHIDO",
+          "EM_PREENCHIMENTO",
+          "NECESSITA_REVISAO",
+          "FLAG_AVALIADO_COORD",
+          "LIBERAR_CUSTOMIZACAO",
+          "FLAG_CANVAS_INTEGRATION",
+          "FLAG_AVALIADO_GESTAO",
+
+          "MANAGE_LINKS_DRIVE",
+          "MANAGE_PERMISSIONS",
+          "CRIAR_TIPO_DE_DOCUMENTO",
+          "DELET_DOCUMENT",
+        ],
+      },
+
+      PROFESSOR: {
+        id: 4,
+        role_id: 4,
+        role: "PROFESSOR",
+        permissions: [
+          "READ_ALL",
+          "FLAG_PREENCHIDO",
+          "EM_PREENCHIMENTO",
+        ],
+      },
+
+      COORDINATOR: {
+        id: 3,
+        role_id: 3,
+        role: "COORDINATOR",
+        permissions: [
+          "READ_ALL",
+          "CRIAR_COMPETENCIA",
+          "EM_PREENCHIMENTO",
+
+          "FLAG_PREENCHIDO",
+          "NECESSITA_REVISAO",
+          "FLAG_AVALIADO_COORD",
+        ],
+      },
+
+      NITE: {
+        id: 2,
+        role_id: 2,
+        role: "NITE",
+        permissions: [
+          "CRIAR_CURSO",
+          "CRIAR_COMPETENCIA",
+          "READ_ALL",
+          "EM_PREENCHIMENTO",
+
+          "FLAG_PREENCHIDO",
+          "NECESSITA_REVISAO",
+          "FLAG_AVALIADO_COORD",
+          "LIBERAR_CUSTOMIZACAO",
+          "FLAG_CANVAS_INTEGRATION",
+          "FLAG_AVALIADO_GESTAO",
+
+          "MANAGE_LINKS_DRIVE",
+          "CRIAR_TIPO_DE_DOCUMENTO",
+        ],
+      },
+    };
+
+    req.user = users[role];
+
+    console.log("USER MOCKADO:", req.user);
+
+    return next();
+  }
+
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({
+      message: "Token não foi fornecido",
+    });
+  }
+
+  try {
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    );
+
+    req.user = decoded;
+
+    next();
+
+  } catch (err) {
+
+    return res.status(403).json({
+      message: "token invalido ou expirado!",
+    });
+
+  }
+};
+
+module.exports = Auth;

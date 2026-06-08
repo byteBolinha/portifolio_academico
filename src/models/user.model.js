@@ -11,14 +11,19 @@ class User{
     }
 
     static async create(db, user) {
-        const [result] = await db.query(
-            `INSERT INTO users (microsoft_id, email_users, name_users, roles_id)
-            VALUES (?, ?, ?, ?)`,
-            [user.microsoft_id, user.email, user.name, user.role_id]
-        );
+    const [result] = await db.query(
+        `INSERT INTO users (microsoft_id, email_users, name_users, roles_id)
+        VALUES (?, ?, ?, ?)`,
+        [
+            user.microsoft_id,
+            user.email_users,
+            user.name_users,
+            1
+        ]
+    );
 
-        return result.insertId;
-    }
+    return result.insertId;
+}
 
     static async findByMicrosoftId(db, microsoft_id,){
         const [result] = await db.query(
