@@ -1,54 +1,61 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const Auth = require("../middleware/jwt.middleware");
-const requirePermissions = require("../middleware/requirePermission.middleware");
-const AcademicDocuments = require("../models/academicDocuments.model");
-const Competency = require("../models/competency.model");
-const Notification = require("../models/notification.model");
+const jwt = require('jsonwebtoken');
+const User = require('../models/user.model');
 
-router.post("/", Auth, requirePermissions('CRIAR_COMPETENCIA'), async (req, res) => {
-  try {
-    const {
-      name_competency,
-      course_id,
-      code_competency,
-      planner_link,
-      teaching_plan_link,
-      trimestre,
-      matriz_competency,
-    } = req.body;
+router.post('/login', async (req, res) => {
+    try {
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        console.log('token recebido:', token ? token.substring(0, 50) + '...' : 'NULO');
 
-    const competencyResult = await Competency.create(req.db, {
-      name: name_competency,
-      course_id,
-      code_competency,
-      matriz_competency,
-    });
+        if (!token) {
+            return res.status(401).json({ message: "Token não fornecido." });
+        }
+        
+        const response = await fetch('https://graph.microsoft.com/v1.0/me', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
 
-    const competencyId = competencyResult.insertId;
+        if (!response.ok) {
+            return res.status(401).json({ message: "Token da Microsoft inválido ou expirado." });
+        }
 
-    await AcademicDocuments.create(req.db, {
-      name: "Planner",
-      competency_id: competencyId,
-      documentType_id: 1,
-      matriz_competency,
-      trimestre,
-      drive_link: planner_link,
-    });
+        const microsoftUser = await response.json();
+        console.log('microsoftUser:', microsoftUser);
 
-    await AcademicDocuments.create(req.db, {
-      name: "Plano de Ensino",
-      competency_id: competencyId,
-      documentType_id: 2,
-      matriz_competency,
-      trimestre,
-      drive_link: teaching_plan_link,
-    });
+        let user = await User.findByMicrosoftId(req.db, microsoftUser.id);
 
-    res.status(201).json({ message: "Competência criada com documentos" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
+        if (user === null) {
+            await User.create(req.db, {
+              microsoft_id: microsoftUser.id,
+              email_users: microsoftUser.mail || microsoftUser.userPrincipalName,
+              name_users: microsoftUser.displayName
+            });
+            user = await User.findByMicrosoftId(req.db, microsoftUser.id);
+        }
+
+        const permissions = await User.findPermissionsByRoleId(req.db, user.roles_id);
+
+        const jwtToken = jwt.sign(
+            {
+                user_id: user.id_users,
+                role_id: user.roles_id,
+                email: user.email_users,
+                permissions: permissions
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: process.env.JWT_EXPIRES }
+        );
+
+        return res.status(200).json({ token: jwtToken });
+
+    } catch (error) {
+        console.error("Erro no processo de login:", error);
+        return res.status(500).json({ message: "Erro interno no servidor." });
+    }
 });
+
 module.exports = router;

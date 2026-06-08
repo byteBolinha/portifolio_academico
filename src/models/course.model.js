@@ -84,6 +84,32 @@ class Course {
 
     return result[0];
   }
+
+  static async enrollUser(db, course_id, user_id) {
+    const [result] = await db.query(
+      'INSERT INTO user_courses (course_id, user_id) VALUES (?, ?)',
+      [course_id, user_id]
+    );
+    return result;
+  }
+
+  static async findByUserId(db, user_id) {
+    const [result] = await db.query(
+      `SELECT c.* FROM courses c 
+       JOIN user_courses uc ON c.id_courses = uc.course_id 
+       WHERE uc.user_id = ?`,
+      [user_id]
+    );
+    return result;
+  }
+
+  static async deactivate(db, id) {
+    const [result] = await db.query(
+      'UPDATE courses SET active = 0 WHERE id_courses = ?',
+      [id]
+    );
+    return result;
+  }
 }
 
 module.exports = Course;
