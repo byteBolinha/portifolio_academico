@@ -21,6 +21,7 @@ router.post('/', Auth, requirePermissions('CRIAR_COMPETENCIA'), async (req, res)
 });
 
     } catch (err) {
+        console.error("Erro na rota de competência:", err);
         res.status(500).json({ error: err.message });
     }
 });
@@ -30,8 +31,10 @@ router.get('/course/:course_id', Auth, requirePermissions('READ_ALL'), async (re
 
     try {
         const results = await Competency.findByCourse(req.db, course_id);
+        console.log(`GET /competency/course/${course_id} - Encontradas: ${results.length}`);
         res.status(200).json(results);
     } catch (err) {
+        console.error("Erro na rota de competência:", err);
         res.status(500).json({ error: err.message });
     }
 });
@@ -43,6 +46,7 @@ router.get('/:id', Auth, requirePermissions('READ_ALL'), async (req, res) => {
         if (!result) return res.status(404).json({ message: "Não encontrado." });
         res.status(200).json(result);
     } catch (err) {
+        console.error("Erro na rota de competência:", err);
         res.status(500).json({ error: err.message });
     }
 });

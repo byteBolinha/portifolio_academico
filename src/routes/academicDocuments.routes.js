@@ -6,7 +6,7 @@ const requirePermissions = require("../middleware/requirePermission.middleware")
 const Competency = require("../models/competency.model");
 const Notification = require("../models/notification.model");
 
-router.post("/", async (req, res) => {
+router.post("/", Auth, requirePermissions('CRIAR_COMPETENCIA'), async (req, res) => {
   try {
     const {
       name_competency,
@@ -31,7 +31,7 @@ router.post("/", async (req, res) => {
       name: "Planner",
       competency_id: competencyId,
       documentType_id: 1,
-      matriz_competency,
+      matriz: matriz_competency,
       trimestre,
       drive_link: planner_link,
     });
@@ -40,20 +40,15 @@ router.post("/", async (req, res) => {
       name: "Plano de Ensino",
       competency_id: competencyId,
       documentType_id: 2,
-      matriz_competency,
+      matriz: matriz_competency,
       trimestre,
       drive_link: teaching_plan_link,
     });
 
-    res.status(201).json({
-      message: "Competência criada com documentos",
-    });
+    res.status(201).json({ message: "Competência criada com documentos" });
   } catch (err) {
     console.error(err);
-
-    res.status(500).json({
-      error: err.message,
-    });
+    res.status(500).json({ error: err.message });
   }
 });
 
