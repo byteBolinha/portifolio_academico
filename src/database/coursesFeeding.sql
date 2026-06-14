@@ -1,3 +1,4 @@
+USE estudos_sistemas;
 INSERT INTO courses (name_courses, matrix_courses, course_icon_url)
 VALUES
 ('Administração', '62', 'http://localhost:3000/uploads/administracao.png'),

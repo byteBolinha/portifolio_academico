@@ -34,7 +34,7 @@ router.get("/user/:user_id", Auth, requirePermissions("READ_ALL"), async (req, r
     return res.status(200).json(userCourses);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Erro interno no servidor." });
+    res.status(500).json({ message: "Erro interno no servidor.", error: err.message });
   }
 });
 
@@ -49,7 +49,7 @@ router.post("/", Auth, requirePermissions("CRIAR_CURSO"), upload.single("image")
   } catch (err) {
     if (err.code === "ER_DUP_ENTRY") return res.status(400).json({ message: "Esse curso já está cadastrado" });
     console.error(err);
-    res.status(500).json({ message: "Erro interno do servidor" });
+    res.status(500).json({ message: "Erro interno do servidor", error: err.message });
   }
 });
 

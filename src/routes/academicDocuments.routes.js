@@ -31,7 +31,7 @@ router.post("/", Auth, requirePermissions('CRIAR_COMPETENCIA'), async (req, res)
       name: "Planner",
       competency_id: competencyId,
       documentType_id: 1,
-      matriz_competency,
+      matriz: matriz_competency,
       trimestre,
       drive_link: planner_link,
     });
@@ -40,7 +40,7 @@ router.post("/", Auth, requirePermissions('CRIAR_COMPETENCIA'), async (req, res)
       name: "Plano de Ensino",
       competency_id: competencyId,
       documentType_id: 2,
-      matriz_competency,
+      matriz: matriz_competency,
       trimestre,
       drive_link: teaching_plan_link,
     });

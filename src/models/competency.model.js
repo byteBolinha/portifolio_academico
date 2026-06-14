@@ -42,6 +42,7 @@ class Competency {
 
       a.id_academicD,
       a.name_academicD,
+      a.matriz_competency AS doc_matriz,
       
       a.trimestre,
       a.drive_link,

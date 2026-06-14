@@ -8,9 +8,9 @@ router.get("/", async (req, res) => {
 
   try {
     const results = await Search.search(req.db, search);
-
     res.status(200).json(results);
   } catch (err) {
+    console.error("Erro na rota de busca:", err);
     res.status(500).json({
       error: err.message,
     });

@@ -12,13 +12,14 @@ class User{
 
     static async create(db, user) {
     const [result] = await db.query(
-        `INSERT INTO users (microsoft_id, email_users, name_users, roles_id)
-        VALUES (?, ?, ?, ?)`,
+        `INSERT INTO users (microsoft_id, email_users, name_users, roles_id, avatar_users)
+        VALUES (?, ?, ?, ?, ?)`,
         [
             user.microsoft_id,
             user.email_users,
             user.name_users,
-            1
+            user.role_id,
+            user.avatar_users
         ]
     );
 

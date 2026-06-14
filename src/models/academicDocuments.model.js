@@ -13,15 +13,17 @@ class AcademicDocuments {
         name_academicD,
         competency_id,
         id_documentType,
+        matriz_competency,
         trimestre,
         drive_link
       )
-      VALUES (?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?)
       `,
       [
         academicDocuments.name,
         academicDocuments.competency_id,
         academicDocuments.documentType_id,
+        academicDocuments.matriz,
         academicDocuments.trimestre,
         academicDocuments.drive_link,
       ],
