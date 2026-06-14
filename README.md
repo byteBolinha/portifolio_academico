@@ -1,35 +1,60 @@
-# Por hora esse arquivo vai ser nosso dossie!
+# API de Gestão Acadêmica - Unifacisa (Backend)
 
-Estou buscando estruturar conformes alguns links abaixos e conceitos:
+Esta é a API desenvolvida para o sistema de gerenciamento de documentos acadêmicos (Planners e Planos de Ensino), competências e cursos da Unifacisa. O sistema conta com integração nativa com Microsoft SSO e um controle de acesso granular (RBAC).
 
-1. [RBAC 0Auth](https://auth0.com/pt/intro-to-iam/what-is-role-based-access-control-rbac);
+## Tecnologias Utilizadas
 
-2. connection pool; Evitar fechar e abrir conexões com o banco, então fazemos uma pool; [leia mais aqui](https://www.geeksforgeeks.org/node-js/how-to-use-connection-pooling-with-mysql-in-nodejs/)
+*   Node.js & Express: Core da aplicação.
+*   MySQL: Banco de dados relacional.
+*   JWT (JSON Web Token): Segurança e autenticação de rotas.
+*   Microsoft Graph API: Autenticação via SSO, captura de cargos e foto de perfil.
+*   Multer: Gerenciamento de upload de imagens (ícones de cursos e avatares).
+*   Swagger: Documentação interativa da API.
 
-A diferença primordial (2) é que teriamos que fechar e abrir conexão por requisição, com a POOL não. 
+## Funcionalidades Principais
 
-## Contexto
-Estava sofrendo e estou um pouco para as questões de permissões, então estava procurando soluções rápidas e fácil de "tercerizar isso ao usuário". 
+*   Autenticação Inteligente: Login via Microsoft com atribuição automática de cargos baseada no jobTitle do Active Directory.
+*   Captura de Identidade: Sincronização automática da foto de perfil da Microsoft para o sistema local.
+*   RBAC (Controle Baseado em Roles): 
+    *   ADMIN: Controle total do sistema e permissões.
+    *   NITE: Gestão de cursos, competências e auditoria final.
+    *   COORDINATOR: Validação pedagógica e revisão de documentos.
+    *   TEACHER: Preenchimento de progresso e links de documentos.
+*   Gestão de Documentos: Fluxo completo de status para Planners e Planos de Ensino (Em andamento -> Preenchido -> Validado -> Integrado).
+*   Busca Global: Motor de busca para localização rápida de cursos e competências.
 
-Nesse caso o que o RBAC faz é **CONTROLE DE ACESSO BASEADO EM FUNÇÕES**. Leiam o link (1) para estarmos no mesmo pé de igualdade de conhecimento. 
+## Como Instalar
 
-Swagger iniciado(apenas para lembrar de fazer), o grupo do front vai ter uma facilidade grande em desenvolver puxando as rotas documentadas. [swagger aqui](./src/config/swagger.js)
+1.  Clonar o repositório e entrar na pasta portifolio_academico.
+2.  Instalar dependências:
+    ```bash
+    npm install
+    ```
+3.  Configurar Variáveis de Ambiente:
+    Crie um arquivo .env na raiz baseando-se no arquivo .env.example fornecido.
 
-**Microsoft tem seu próprio JWT pelo SSO**, porém ainda planejo criar o nosso, em minha percepção faz sentido e é mais flexível.
+4.  Configurar Banco de Dados:
+    Execute os scripts na ordem:
+    *   src/database/schema.sql (Estrutura)
+    *   src/database/feeding.sql (Dados iniciais)
 
-Lógica de usuário é meio abstrato, possivelmente pela falta de experiência.
+5.  Iniciar o Servidor:
+    ```bash
+    npm start
+    ```
 
-## tabela de permissões que eu estou trabalhando:
-Lembrar que cada um em seu curso, objeto referenciando o curso. O sistema não tem ainda, mas tem que ter uma estrutura de salvar e adicionar vários cursos por vez. Explicar para o demandante o que é preciso para que seja feita uma fast config, ou seja, entrou usou o sistema e pode configurar (quase exportar tudo uma única vez).
+## Documentação da API (Swagger)
 
-| Ação | admin | nite | coordenador | professor |
-|---|---|---|---|---|
-|preencher planner|sim|não|sim|não|
-|preencher planner(ensino)|sim|não|não|sim|
-|validar coordenação|sim|não|sim|não|
-|marcar canvas/rm|sim|sim|não|não|
-|liberar para customizar|sim|sim|sim|não|
-|ver tudo|sim|sim|sim|sim|
-|gerenciar usuarios|sim|não|não|não|
-|criar curso|sim|não|não|não|
-|remover curso|sim|não|não|não|
+Com o servidor rodando, acesse a documentação interativa para testar todos os endpoints:
+
+Caminho: http://localhost:3000/api-docs
+
+## Estrutura de Pastas
+
+*   src/routes/: Definição de todos os endpoints da API.
+*   src/models/: Lógica de banco de dados e queries SQL.
+*   src/middleware/: Travas de segurança, autenticação e validação de curso.
+*   uploads/: Armazenamento físico de ícones e fotos de perfil.
+
+---
+Desenvolvido para o projeto de Portfólio Acadêmico da Unifacisa.
