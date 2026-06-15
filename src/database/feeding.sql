@@ -1,3 +1,4 @@
+SET NAMES 'utf8mb4';
 USE estudos_sistemas;
 
 INSERT INTO permissions (name_permissions) VALUES

@@ -14,7 +14,7 @@ app.use("/uploads", express.static("uploads"));
 
 
 app.use(cors({
-    origin: "http://localhost:5173" 
+    origin: process.env.CORS_ORIGIN || "http://localhost:5173" 
 }));
 const injectDb = require('./src/middleware/db.middleware');
 app.use(injectDb);

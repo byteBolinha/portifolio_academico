@@ -1,4 +1,5 @@
-CREATE DATABASE IF NOT EXISTS estudos_sistemas;
+SET NAMES 'utf8mb4';
+CREATE DATABASE IF NOT EXISTS estudos_sistemas CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE estudos_sistemas;
 
 CREATE TABLE IF NOT EXISTS permissions (

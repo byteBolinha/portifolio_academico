@@ -1,3 +1,4 @@
+SET NAMES 'utf8mb4';
 USE estudos_sistemas;
 INSERT INTO courses (name_courses, matrix_courses, course_icon_url)
 VALUES
@@ -12,7 +13,7 @@ VALUES
 ('Engenharia Civil', '62', 'http://localhost:3000/uploads/engenharia-civil.png'),
 ('Farmácia', '62', 'http://localhost:3000/uploads/farmacia.png'),
 ('Fisioterapia', '62', 'http://localhost:3000/uploads/fisioterapia.png'),
-('Inteligência Artificial', '63', 'http://localhost:3000/uploads/ia.png'),
+('Inteligência Artificial', '63', 'http://localhost:3000/uploads/IA.png'),
 ('Jogos Digitais', '62', 'http://localhost:3000/uploads/jogos-digitais.png'),
 ('Medicina Veterinária', '62', 'http://localhost:3000/uploads/med-vet.png'),
 ('Medicina', '62', 'http://localhost:3000/uploads/medicina.png'),
