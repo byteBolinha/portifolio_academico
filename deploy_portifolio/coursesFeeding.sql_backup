@@ -1,0 +1,23 @@
+SET NAMES 'utf8mb4';
+USE estudos_sistemas;
+INSERT INTO courses (name_courses, matrix_courses, course_icon_url)
+VALUES
+('Administração', '62', '/uploads/administracao.png'),
+('Análise e Desenvolvimento de Sistemas', '63', '/uploads/ads.png'),
+('Biomedicina', '62', '/uploads/biomedicina.png'),
+('Arquitetura e Urbanismo', '62', '/uploads/arquitetura.png'),
+('Design Gráfico Digital', '62', '/uploads/design.png'),
+('Direito', '62', '/uploads/direito.png'),
+('Educação Física', '62', '/uploads/educacao-fisica.png'),
+('Enfermagem', '62', '/uploads/enfermagem.png'),
+('Engenharia Civil', '62', '/uploads/engenharia-civil.png'),
+('Farmácia', '62', '/uploads/farmacia.png'),
+('Fisioterapia', '62', '/uploads/fisioterapia.png'),
+('Inteligência Artificial', '63', '/uploads/IA.png'),
+('Jogos Digitais', '62', '/uploads/jogos-digitais.png'),
+('Medicina Veterinária', '62', '/uploads/med-vet.png'),
+('Medicina', '62', '/uploads/medicina.png'),
+('Nutrição', '62', '/uploads/nutricao.png'),
+('Odontologia', '62', '/uploads/odontologia.png'),
+('Psicologia', '62', '/uploads/psicologia.png'),
+('Sistemas de Informação', '62', '/uploads/sistemas.png');

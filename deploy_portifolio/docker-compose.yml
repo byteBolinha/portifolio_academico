@@ -1,63 +1,46 @@
 services:
   db:
     image: mysql:8.0
-    container_name: portfolio-db
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    restart: always
     environment:
-      MYSQL_DATABASE: ${DB_NAME}
       MYSQL_ROOT_PASSWORD: ${DB_PASS}
-    ports:
-      - "3306:3306"
+      MYSQL_DATABASE: ${DB_NAME}
     volumes:
-      - ../portifolio_academico/src/database/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
-      - ../portifolio_academico/src/database/feeding.sql:/docker-entrypoint-initdb.d/2-feeding.sql
-      - ../portifolio_academico/src/database/coursesFeeding.sql:/docker-entrypoint-initdb.d/3-coursesFeeding.sql
-      - db_data:/var/lib/mysql
+      - ../portifolio_academico/src/database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:z
+      - ../portifolio_academico/src/database/feeding.sql:/docker-entrypoint-initdb.d/02_feeding.sql:z
+      - ../portifolio_academico/src/database/coursesFeeding.sql:/docker-entrypoint-initdb.d/03_coursesFeeding.sql:z
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   backend:
     build: ../portifolio_academico
-    container_name: portfolio-backend
-    restart: always
     environment:
       DB_HOST: db
       DB_USER: root
       DB_PASS: ${DB_PASS}
       DB_NAME: ${DB_NAME}
-      CORS_ORIGIN: "*" 
       JWT_SECRET: ${JWT_SECRET}
-      JWT_EXPIRES: 2h
+      JWT_EXPIRES: ${JWT_EXPIRES}
+      CLIENT_ID: ${CLIENT_ID}
+      TENANT_ID: ${TENANT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      CORS_ORIGIN: http://localhost:5173
+    ports:
+      - "3000:3000"
     volumes:
-      - ../portifolio_academico/uploads:/app/uploads
+      - ../portifolio_academico/uploads:/app/uploads:z
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   frontend:
     build:
       context: ../portfolio-frontend/portfolio
       args:
-        VITE_API_URL: "" 
-    container_name: portfolio-frontend
-    restart: always
+        VITE_API_URL: http://localhost:3000
+    ports:
+      - "5173:80"
     depends_on:
       - backend
-
-  gateway:
-    image: nginx:alpine
-    container_name: portfolio-gateway
-    volumes:
-      - ./nginx-proxy.conf:/etc/nginx/conf.d/default.conf:ro
-    depends_on:
-      - frontend
-      - backend
-
-  cloudflare-tunnel:
-    image: cloudflare/cloudflared:latest
-    container_name: cloudflare-tunnel
-    restart: unless-stopped
-    command: tunnel --url http://gateway:80
-    depends_on:
-      - gateway
-
-volumes:
-  db_data:

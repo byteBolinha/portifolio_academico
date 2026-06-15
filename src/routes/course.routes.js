@@ -74,7 +74,7 @@ router.put("/:id", Auth, requirePermissions("CRIAR_CURSO"), upload.single("image
     const existingCourse = await Course.findById(req.db, id);
     if (!existingCourse) return res.status(404).json({ message: "Curso não encontrado" });
     const course_icon_url = req.file
-      ? `http://localhost:3000/uploads/${req.file.filename}`
+      ? `/uploads/${req.file.filename}`
       : existingCourse.course_icon_url;
     await Course.update(req.db, id, { name_courses, matrix_courses, course_icon_url });
     res.status(200).json({ id_courses: id, name_courses, matrix_courses, course_icon_url });

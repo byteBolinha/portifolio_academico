@@ -45,7 +45,7 @@ router.post('/login', async (req, res) => {
                 }
 
                 fs.writeFileSync(uploadPath, buffer);
-                avatarUrl = `http://localhost:3000/uploads/${fileName}`;
+                avatarUrl = `/uploads/${fileName}`;
             }
         } catch (photoError) {
             console.log('Usuário sem foto ou erro ao capturar:', photoError.message);
