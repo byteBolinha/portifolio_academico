@@ -26,6 +26,8 @@ const userRoutes = require('./src/routes/users.routes')
 const coursesRoutes = require('./src/routes/course.routes')
 const searchRoutes = require("./src/routes/search.routes");
 const notificationRoutes = require("./src/routes/notification.routes");
+const auditLogRoutes = require('./src/routes/auditLog.routes');
+//ADD app.use('/audit-logs', auditLogRoutes); Dentro do app.use
 
 app.use('/courses', coursesRoutes)
 app.use('/competency', competencyRoutes);

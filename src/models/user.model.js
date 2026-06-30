@@ -71,6 +71,29 @@ class User{
         
     }
 
+    static async findAllUsersWithRoles(db) {
+        try {
+            const [users] = await db.query(
+            `SELECT
+                u.id_users,
+                u.name_users,
+                u.email_users,
+                u.avatar_users,
+                u.active,
+                u.created_at_users,
+                r.id_roles   AS role_id,
+                r.name_roles AS role_name
+            FROM users u
+            LEFT JOIN roles r ON u.roles_id = r.id_roles
+            ORDER BY u.name_users`
+            );
+            return users.length ? users : [];
+        } catch (err) {
+            console.error('[User.findAllUsersWithRoles]', err);
+            return false;
+        }
+    } 
+
     static async updateRole(db, id, role_id) {
         try {
             const [result] = await db.query(
@@ -103,6 +126,19 @@ class User{
             const [result] = await db.query(
                 'UPDATE users SET active = 0 WHERE id_users = ?',
                 [id]
+            );
+            return result;
+        } catch (err) {
+            console.error(err);
+            return false;
+        }
+    }
+
+    static async reactivateUser(db, id) {
+        try {
+            const [result] = await db.query(
+            'UPDATE users SET active = 1 WHERE id_users = ?',
+            [id]
             );
             return result;
         } catch (err) {

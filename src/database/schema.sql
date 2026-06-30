@@ -97,3 +97,24 @@ CREATE TABLE IF NOT EXISTS notifications (
     CONSTRAINT fk_notification_competency FOREIGN KEY (competency_id) REFERENCES competency(id_competency) ON DELETE CASCADE,
     CONSTRAINT fk_notification_document FOREIGN KEY (document_id) REFERENCES academic_documents(id_academicD) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS audit_log (
+    id_log INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    user_name VARCHAR(255) NOT NULL,
+    user_role VARCHAR(50) NOT NULL,
+    action VARCHAR(100) NOT NULL,
+    entity VARCHAR(50) NOT NULL,
+    entity_id INT,
+    old_value JSON,
+    new_value JSON,
+    description TEXT,
+    ip_address VARCHAR(45),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_audit_user FOREIGN KEY (user_id) REFERENCES users(id_users) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_audit_user    ON audit_log (user_id);
+CREATE INDEX idx_audit_entity  ON audit_log (entity, entity_id);
+CREATE INDEX idx_audit_action  ON audit_log (action);
+CREATE INDEX idx_audit_created ON audit_log (created_at);

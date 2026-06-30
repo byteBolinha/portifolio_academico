@@ -5,6 +5,7 @@ const AcademicDocuments = require("../models/academicDocuments.model");
 const requirePermissions = require("../middleware/requirePermission.middleware");
 const Competency = require("../models/competency.model");
 const Notification = require("../models/notification.model");
+const auditLog = require('../middleware/auditLog.middleware');
 
 router.post("/", Auth, requirePermissions('CRIAR_COMPETENCIA'), async (req, res) => {
   try {
@@ -84,6 +85,7 @@ router.patch(
   "/:id/flag/customizar",
   Auth,
   requirePermissions("LIBERAR_CUSTOMIZACAO"),
+  auditLog('FLAG_LIBERADO_CUSTOMIZAR', 'academic_documents'),
   async (req, res) => {
     try {
       const { status } = req.body;
@@ -118,6 +120,7 @@ router.patch(
   "/:id/flag/preenchido",
   Auth,
   requirePermissions("FLAG_PREENCHIDO"),
+  auditLog('FLAG_PREENCHIDO', 'academic_documents'),
   async (req, res) => {
     try {
       const { status } = req.body;
@@ -152,6 +155,7 @@ router.patch(
   "/:id/flag/coordenacao",
   Auth,
   requirePermissions("FLAG_AVALIADO_COORD"),
+  auditLog('FLAG_VALIDACAO_COORDENACAO', 'academic_documents'),
   async (req, res) => {
     try {
       const { status } = req.body;
@@ -186,6 +190,7 @@ router.patch(
   "/:id/flag/gestao",
   Auth,
   requirePermissions("FLAG_AVALIADO_GESTAO"),
+  auditLog('FLAG_AVALIADO_GESTAO', 'academic_documents'),
   async (req, res) => {
     try {
       const { status } = req.body;
@@ -294,6 +299,7 @@ router.patch(
   '/:id/flag/necessita-revisao',
   Auth,
   requirePermissions('NECESSITA_REVISAO'),
+  auditLog('FLAG_NECESSITA_REVISAO', 'academic_documents'),
   async (req, res) => {
     try {
       const { status } = req.body;
@@ -334,6 +340,7 @@ router.patch(
   "/:id/flag/em-preenchimento",
   Auth,
   requirePermissions("EM_PREENCHIMENTO"),
+  auditLog('FLAG_EM_PREENCHIMENTO', 'academic_documents'),
   async (req, res) => {
     try {
       const { status } = req.body;
@@ -368,6 +375,7 @@ router.patch(
   "/:id/flag/canvas",
   Auth,
   requirePermissions("FLAG_CANVAS_INTEGRATION"),
+  auditLog('FLAG_CANVAS_INTEGRATION', 'academic_documents'),
   async (req, res) => {
     try {
       const { status } = req.body;

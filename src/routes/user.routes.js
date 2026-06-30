@@ -3,19 +3,18 @@ const router = express.Router();
 const Auth = require('../middleware/jwt.middleware');
 const User = require('../models/user.model')
 const requirePermissions = require('../middleware/requirePermission.middleware');
+const auditLog = require('../middleware/auditLog.middleware');
 
-router.get('/', Auth, requirePermissions('READ_ALL'), async (req, res)=>{
-
-    try {
-        const users = await User.findAllUsers(req.db);
-        return res.status(200).json(users);    
+router.get('/', Auth, requirePermissions('READ_ALL'), async (req, res) => {
+  try {
+    const users = await User.findAllUsersWithRoles(req.db);
+    return res.status(200).json(users);
+  
     } catch (err) {
-        console.log(err);
-        return res.status(400).json({
-            error:'erro interno no servidor'
-        });
-    }
-    
+    console.error(err);
+    return res.status(500).json({ error: 'Erro interno no servidor.' });
+  }
+
 });
 
 router.patch('/:id/role', Auth, requirePermissions('MANAGE_PERMISSIONS'), async(req, res)=>{
@@ -78,6 +77,34 @@ router.patch('/:id/deactivate', Auth, requirePermissions('DEACTIVE_USER'), async
         console.error(err);
         return res.status(500).json({ error: 'Erro interno ao desativar usuário.' });
     }
+});
+
+router.patch('/:id/reactivate', Auth, requirePermissions('REACTIVATE_USER'), async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const result = await User.reactivateUser(req.db, id);
+
+        if (!result || result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Usuário não encontrado.' });
+        }
+
+        return res.status(200).json({ 
+            message: 'Usuário reativado com sucesso!' 
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Erro interno ao reativar usuário.' });
+    }
+});
+
+router.get('/roles', Auth, requirePermissions('READ_ALL'), async (req, res) => {
+  try {
+    const [roles] = await req.db.query('SELECT id_roles, name_roles FROM roles ORDER BY id_roles');
+    return res.status(200).json(roles);
+  } catch (err) {
+    return res.status(500).json({ error: 'Erro ao buscar roles.' });
+  }
 });
 
 module.exports = router;
